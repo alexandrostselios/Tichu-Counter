@@ -1,4 +1,4 @@
-package com.example.alexa.myapplication;
+package com.example.alexa.tichucounter;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
