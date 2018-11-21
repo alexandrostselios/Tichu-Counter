@@ -23,6 +23,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
+
 public class MainActivity extends AppCompatActivity {
     //private Button setScore = null;
     private TextView roundScore = null;
@@ -51,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     private int teamGrandTichu2 = 0;
     private int score2 = 0;
 
+    private boolean win = false;
     private int error=0;
 
     @Override
@@ -73,16 +76,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.reset_score:
+            case R.id.menu_new_game:
                 clearScore();
                 return true;
-            case R.id.menu_save:
-                Toast.makeText(MainActivity.this, "Save is Selected", Toast.LENGTH_SHORT).show();
+            case R.id.menu_save_game:
+                Toast.makeText(MainActivity.this, "Save Game is Selected", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.menu_load_game:
+                Toast.makeText(MainActivity.this, "Load Game is Selected", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_about:
-                Toast.makeText(MainActivity.this, "About is Selected", Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.menu_version:
                 Toast.makeText(MainActivity.this, "Version: 1.0", Toast.LENGTH_SHORT).show();
                 return true;
             default:
@@ -90,44 +93,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void clearScore() {
-        score1=0;
-        score2=0;
-
-        TextScore1.setText(String.valueOf(""));
-        TextScore2.setText(String.valueOf(""));
-
-        teamTichu1=0;
-        teamGrandTichu1=0;
-        tichuCheck1.setChecked(false);
-        grandTichuCheck1.setChecked(false);
-
-        teamTichu2=0;
-        teamGrandTichu2=0;
-        tichuCheck2.setChecked(false);
-        grandTichuCheck2.setChecked(false);
-
-        tichu1.getBackground().clearColorFilter();
-        tichu2.getBackground().clearColorFilter();
-        grandTichu1.getBackground().clearColorFilter();
-        grandTichu2.getBackground().clearColorFilter();
-        currentScore1.setText(String.valueOf(""));
-        currentScore2.setText(String.valueOf(""));
-    }
-
     private void createButtons(){
-/*
-        setScore = (Button) findViewById(R.id.setScore);
-        setScore.setBackgroundResource(android.R.drawable.btn_default);
-
-        setScore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                checkScore();
-            }
-        });
-*/
-
         roundScore = (TextView) findViewById(R.id.roundPoints);
         roundScore.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -253,16 +219,27 @@ public class MainActivity extends AppCompatActivity {
         }else{
             Toast.makeText(getApplicationContext(), "Please give points", Toast.LENGTH_SHORT).show();
         }
+        checkWinner();
+        if(win){
+            Log.i("winner","+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+            clearScore();
+        }
     }
 
-    private void setScore() {
-        checkTichuStatus();
-        if(error==0){
-            TextScore1.setText(String.valueOf(score1));
-            TextScore2.setText(String.valueOf(score2));
-            clear();
-        }else{
-            error=0;
+    private void checkWinner(){
+        if(score1>=1000 && score2<1000){
+            win = true;
+            Toast.makeText(getApplicationContext(), "Team 1 won the game", Toast.LENGTH_SHORT).show();
+        }else if(score2>=1000 && score1<1000){
+            win = true;
+            Toast.makeText(getApplicationContext(), "Team 2 won the game", Toast.LENGTH_SHORT).show();
+        }else if(score1>=1000 && score2>=1000){
+            if(score1>score2){
+                Toast.makeText(getApplicationContext(), "Team 1 won the game", Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(getApplicationContext(), "Team 2 won the game", Toast.LENGTH_SHORT).show();
+            }
+        win = true;
         }
     }
 
@@ -300,8 +277,44 @@ public class MainActivity extends AppCompatActivity {
         }else if(teamGrandTichu2==1 && !grandTichuCheck2.isChecked()){
             score2 -= 200;
         }
-        Log.d("null", "score1: "+score1);
-        Log.d("null", "score2: "+score2);
+        /*Log.d("null", "score1: "+score1);
+        Log.d("null", "score2: "+score2);*/
+    }
+
+    private void setScore() {
+        checkTichuStatus();
+        if(error==0){
+            TextScore1.setText(String.valueOf(score1));
+            TextScore2.setText(String.valueOf(score2));
+            clear();
+        }else{
+            error=0;
+        }
+    }
+
+    private void clearScore() {
+        score1=0;
+        score2=0;
+
+        TextScore1.setText(String.valueOf(""));
+        TextScore2.setText(String.valueOf(""));
+
+        teamTichu1=0;
+        teamGrandTichu1=0;
+        tichuCheck1.setChecked(false);
+        grandTichuCheck1.setChecked(false);
+
+        teamTichu2=0;
+        teamGrandTichu2=0;
+        tichuCheck2.setChecked(false);
+        grandTichuCheck2.setChecked(false);
+
+        tichu1.getBackground().clearColorFilter();
+        tichu2.getBackground().clearColorFilter();
+        grandTichu1.getBackground().clearColorFilter();
+        grandTichu2.getBackground().clearColorFilter();
+        currentScore1.setText(String.valueOf(""));
+        currentScore2.setText(String.valueOf(""));
     }
 
     private void clear(){
