@@ -86,10 +86,8 @@ public class TichuCounter {
 
     public boolean isWinner(){
         if(win){
-            Log.i("winner","+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
             return true;
         }
-        Log.i("winner","------------------------------------------------------------------");
         return false;
     }
 
@@ -144,7 +142,5 @@ public class TichuCounter {
         }else if(teamGrandTichu2==1 && !grandTichuCheck2.isChecked()){
             score2 -= 200;
         }
-        /*Log.d("null", "score1: "+score1);
-        Log.d("null", "score2: "+score2);*/
     }
 }

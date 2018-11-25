@@ -15,10 +15,7 @@ import android.widget.Toast;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import org.w3c.dom.Text;
-
 public class MainActivity extends AppCompatActivity {
-    //private Button setScore = null;
     private TextView roundScore = null;
 
     private Button tichu1 = null;
