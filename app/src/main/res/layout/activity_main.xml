@@ -20,7 +20,7 @@
         app:layout_constraintVertical_bias="0.1" />
 
     <EditText
-        android:id="@+id/score1"
+        android:id="@+id/score1EditText"
         android:layout_width="115dp"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -112,7 +112,7 @@
         app:layout_constraintVertical_bias="0.100" />
 
     <EditText
-        android:id="@+id/score2"
+        android:id="@+id/score2EditText"
         android:layout_width="114dp"
         android:layout_height="wrap_content"
         android:ems="10"

@@ -15,6 +15,8 @@ import android.widget.Toast;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.w3c.dom.Text;
+
 public class MainActivity extends AppCompatActivity {
     //private Button setScore = null;
     private TextView roundScore = null;
@@ -43,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private int teamGrandTichu2 = 0;
     private int score2 = 0;
 
+    private TichuCounter tichuCounter=null;
     private boolean win = false;
     private int error=0;
 
@@ -53,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         createButtons();
         createEditText();
         createCheckBox();
+        playGame();
     }
 
     @SuppressLint("ResourceType")
@@ -88,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         roundScore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                checkScore();
+                tichuCounter.checkScore(currentScore1,currentScore2);
             }
         });
 
@@ -157,8 +161,8 @@ public class MainActivity extends AppCompatActivity {
     private void createEditText() {
         currentScore1 = (EditText) findViewById(R.id.currentScore1);
         currentScore2 = (EditText) findViewById(R.id.currentScore2);
-        TextScore1 = (EditText) findViewById(R.id.score1);
-        TextScore2 = (EditText) findViewById(R.id.score2);
+        TextScore1 = (EditText) findViewById(R.id.score1EditText);
+        TextScore2 = (EditText) findViewById(R.id.score2EditText);
     }
 
     private void createCheckBox(){
@@ -168,69 +172,10 @@ public class MainActivity extends AppCompatActivity {
         grandTichuCheck2 = (CheckBox) findViewById(R.id.grandTichuCheck2);
     }
 
-    private void checkScore(){
-        int counter=0;
-        if(!currentScore1.getText().toString().equals("")){
-            if(currentScore1.isFocused()){
-                if((Integer.parseInt(currentScore1.getText().toString())%5)!=0 && (Integer.parseInt(currentScore1.getText().toString())%5)!=5){
-                    Toast.makeText(getApplicationContext(), "Score of team 1 is WRONG", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if((Integer.parseInt(currentScore1.getText().toString()) > 125) || (Integer.parseInt(currentScore1.getText().toString()) < -25)){
-                    Toast.makeText(getApplicationContext(), "Score of team 1 is WRONG", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-            }
-            currentScore2.setText(String.valueOf(100 - Integer.parseInt(currentScore1.getText().toString())));
-            counter++;
-        }
-        if(!currentScore2.getText().toString().equals("")){
-            if(currentScore2.isFocused()){
-                if((Integer.parseInt(currentScore2.getText().toString())%5)!=0 && (Integer.parseInt(currentScore2.getText().toString())%5)!=5){
-                    Toast.makeText(getApplicationContext(), "Score of team 2 is WRONG", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if((Integer.parseInt(currentScore2.getText().toString()) > 125) || (Integer.parseInt(currentScore2.getText().toString()) < -25)){
-                    Toast.makeText(getApplicationContext(), "Score of team 2 is WRONG", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-            }
-            currentScore1.setText(String.valueOf(100 - Integer.parseInt(currentScore2.getText().toString())));
-            counter++;
-        }
-        if(counter>=1){
-            if (Integer.parseInt(currentScore1.getText().toString()) + Integer.parseInt(currentScore2.getText().toString()) <= 100) {
-                score1 += Integer.parseInt(currentScore1.getText().toString());
-                score2 += Integer.parseInt(currentScore2.getText().toString());
-                setScore();
-            } else {
-                Toast.makeText(getApplicationContext(), "Score Above 100 points", Toast.LENGTH_SHORT).show();
-            }
-        }else{
-            Toast.makeText(getApplicationContext(), "Please give points", Toast.LENGTH_SHORT).show();
-        }
-        checkWinner();
-        if(win){
-            Log.i("winner","+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-            clearScore();
-        }
-    }
-
-    private void checkWinner(){
-        if(score1>=1000 && score2<1000){
-            win = true;
-            Toast.makeText(getApplicationContext(), "Team 1 won the game", Toast.LENGTH_SHORT).show();
-        }else if(score2>=1000 && score1<1000){
-            win = true;
-            Toast.makeText(getApplicationContext(), "Team 2 won the game", Toast.LENGTH_SHORT).show();
-        }else if(score1>=1000 && score2>=1000){
-            if(score1>score2){
-                Toast.makeText(getApplicationContext(), "Team 1 won the game", Toast.LENGTH_SHORT).show();
-            }else{
-                Toast.makeText(getApplicationContext(), "Team 2 won the game", Toast.LENGTH_SHORT).show();
-            }
-        win = true;
-        }
+    private void playGame(){
+        tichuCounter = new TichuCounter(MainActivity.this);
+        tichuCounter.checkScore(currentScore1,currentScore2);
+        setScore();
     }
 
     private void checkTichuStatus(){
@@ -271,11 +216,11 @@ public class MainActivity extends AppCompatActivity {
         Log.d("null", "score2: "+score2);*/
     }
 
-    private void setScore() {
+    public void setScore() {
         checkTichuStatus();
         if(error==0){
-            TextScore1.setText(String.valueOf(score1));
-            TextScore2.setText(String.valueOf(score2));
+            TextScore1.setText(String.valueOf(tichuCounter.getScoreteam1()));
+            TextScore2.setText(String.valueOf(tichuCounter.getScoreteam2()));
             clear();
         }else{
             error=0;
