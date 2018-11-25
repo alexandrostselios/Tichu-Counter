@@ -37,11 +37,9 @@ public class MainActivity extends AppCompatActivity {
     private CheckBox grandTichuCheck2 = null;
 
     private int teamTichu1 = 0;
-    private int teamCheck1 = 0;
     private int teamGrandTichu1 = 0;
     private int score1 = 0;
     private int teamTichu2 = 0;
-    private int teamCheck2 = 0;
     private int teamGrandTichu2 = 0;
     private int score2 = 0;
 
@@ -93,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 tichuCounter.checkScore(currentScore1,currentScore2);
+                setScore();
             }
         });
 
@@ -161,8 +160,8 @@ public class MainActivity extends AppCompatActivity {
     private void createEditText() {
         currentScore1 = (EditText) findViewById(R.id.currentScore1);
         currentScore2 = (EditText) findViewById(R.id.currentScore2);
-        TextScore1 = (EditText) findViewById(R.id.score1EditText);
-        TextScore2 = (EditText) findViewById(R.id.score2EditText);
+        TextScore1 =  findViewById(R.id.score1EditText);
+        TextScore2 =  findViewById(R.id.score2EditText);
     }
 
     private void createCheckBox(){
@@ -174,56 +173,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void playGame(){
         tichuCounter = new TichuCounter(MainActivity.this);
-        tichuCounter.checkScore(currentScore1,currentScore2);
-        setScore();
+        tichuCounter.isWinner();
     }
 
-    private void checkTichuStatus(){
-        if((teamTichu1==1 && teamGrandTichu1==1 && tichuCheck1.isChecked() && grandTichuCheck1.isChecked())
-            || (teamTichu1==1 && teamTichu2==1 && tichuCheck1.isChecked() && tichuCheck2.isChecked())
-            || (teamTichu1==1 && teamGrandTichu2==1 && tichuCheck1.isChecked() && grandTichuCheck2.isChecked())
-            || (teamTichu2==1 && teamGrandTichu2==1 && tichuCheck2.isChecked() && grandTichuCheck2.isChecked())
-            || (teamGrandTichu1==1 && teamTichu2==1 && grandTichuCheck1.isChecked() && tichuCheck2.isChecked())
-            || (teamGrandTichu1==1 && teamGrandTichu2==1 && grandTichuCheck1.isChecked() && grandTichuCheck2.isChecked())){
 
-            Toast.makeText(getApplicationContext(), "Check Tichu/Grand", Toast.LENGTH_SHORT).show();
-            error=1;
-            return;
-        }
-        if(teamTichu1==1 && tichuCheck1.isChecked()){
-            Log.d("null", "Team 1 TICHU");
-            score1 += 100;
-        }else if(teamTichu1==1 && !tichuCheck1.isChecked()){
-            score1 -= 100;
-        }
-        if(teamGrandTichu1==1 && grandTichuCheck1.isChecked()){
-            Log.d("null", "Team 1 GRAND TICHU");
-            score1 += 200;
-        }else if(teamGrandTichu1==1 && !grandTichuCheck1.isChecked()){
-            score1 -= 200;
-        }
-        if(teamTichu2==1 && tichuCheck2.isChecked()){
-            score2 += 100;
-        }else if(teamTichu2==1 && !tichuCheck2.isChecked()){
-            score2 -= 100;
-        }
-        if(teamGrandTichu2==1 && grandTichuCheck2.isChecked()){
-            score2 += 200;
-        }else if(teamGrandTichu2==1 && !grandTichuCheck2.isChecked()){
-            score2 -= 200;
-        }
-        /*Log.d("null", "score1: "+score1);
-        Log.d("null", "score2: "+score2);*/
-    }
 
     public void setScore() {
-        checkTichuStatus();
+        tichuCounter.checkTichuStatus(teamTichu1,tichuCheck1,grandTichu1,teamGrandTichu1,grandTichuCheck1,teamTichu2,tichuCheck2,grandTichu2,teamGrandTichu2,grandTichuCheck2);
         if(error==0){
-            TextScore1.setText(String.valueOf(tichuCounter.getScoreteam1()));
-            TextScore2.setText(String.valueOf(tichuCounter.getScoreteam2()));
+            TextScore1.setText(String.valueOf(tichuCounter.getScoreTeam1()));
+            TextScore2.setText(String.valueOf(tichuCounter.getScoreTeam2()));
             clear();
-        }else{
-            error=0;
+        }else {
+            error = 0;
         }
     }
 
@@ -250,6 +212,7 @@ public class MainActivity extends AppCompatActivity {
         grandTichu2.getBackground().clearColorFilter();
         currentScore1.setText(String.valueOf(""));
         currentScore2.setText(String.valueOf(""));
+        playGame();
     }
 
     private void clear(){

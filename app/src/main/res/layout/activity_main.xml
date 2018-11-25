@@ -180,6 +180,8 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:textAlignment="center"
+        android:digits="0123456789-"
+        android:inputType="numberSigned"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.861"
         app:layout_constraintLeft_toLeftOf="parent"
