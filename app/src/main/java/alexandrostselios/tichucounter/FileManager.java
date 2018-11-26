@@ -1,4 +1,4 @@
-package com.example.alexa.tichucounter;
+package alexandrostselios.tichucounter;
 
 public class FileManager {
 

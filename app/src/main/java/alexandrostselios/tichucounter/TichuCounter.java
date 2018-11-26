@@ -1,4 +1,4 @@
-package com.example.alexa.tichucounter;
+package alexandrostselios.tichucounter;
 
 import android.content.Context;
 import android.util.Log;
