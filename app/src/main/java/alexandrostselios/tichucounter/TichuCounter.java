@@ -1,5 +1,5 @@
 package alexandrostselios.tichucounter;
-//test
+
 import android.content.Context;
 import android.util.Log;
 import android.widget.Button;

@@ -1,2 +1,0 @@
-android.support.test.espresso
-string app_name

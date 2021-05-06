@@ -1,2 +1,0 @@
-android.support.test.rule
-string app_name
