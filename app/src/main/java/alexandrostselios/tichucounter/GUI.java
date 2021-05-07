@@ -1,6 +1,7 @@
 package alexandrostselios.tichucounter;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -74,7 +75,9 @@ public class GUI extends AppCompatActivity {
                 Toast.makeText(GUI.this, "Load Game is Selected", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_about:
-                Toast.makeText(GUI.this, "Version: 3.0", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(GUI.this, About.class);
+                startActivity(intent);
+                //Toast.makeText(GUI.this, "Version: 3.0", Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
