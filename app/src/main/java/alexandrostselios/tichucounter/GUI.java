@@ -76,6 +76,7 @@ public class GUI extends AppCompatActivity {
                 return true;
             case R.id.menu_about:
                 Intent intent = new Intent(GUI.this, About.class);
+                intent.putExtra("key","tselios");
                 startActivity(intent);
                 //Toast.makeText(GUI.this, "Version: 3.0", Toast.LENGTH_SHORT).show();
                 return true;
