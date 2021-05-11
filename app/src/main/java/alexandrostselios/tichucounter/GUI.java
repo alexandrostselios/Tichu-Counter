@@ -69,16 +69,16 @@ public class GUI extends AppCompatActivity {
                 clearScore();
                 return true;
             case R.id.menu_save_game:
-                Toast.makeText(GUI.this, "Save Game is Selected", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(GUI.this, Save.class);
+                intent.putExtra("score","Team 1: "+tichuCounter.getScoreTeam1()+" Team 2: "+tichuCounter.getScoreTeam2());
+                startActivity(intent);
+                //Toast.makeText(GUI.this, "Save Game is Selected", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_load_game:
                 Toast.makeText(GUI.this, "Load Game is Selected", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_about:
-                Intent intent = new Intent(GUI.this, About.class);
-                intent.putExtra("key","tselios");
-                startActivity(intent);
-                //Toast.makeText(GUI.this, "Version: 3.0", Toast.LENGTH_SHORT).show();
+                Toast.makeText(GUI.this, "Version: 3.0", Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
