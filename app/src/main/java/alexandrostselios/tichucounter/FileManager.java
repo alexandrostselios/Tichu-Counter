@@ -13,14 +13,14 @@ import java.util.Date;
 
 public class FileManager {
 
-    private final Intent intent;
-    private final Context context;
+    private Intent intent;
+    private Context context;
     private File file;
     private OutputStreamWriter outputStreamWriter;
     private Date currentDate;
-    private String writeData;
+    private String[] writeData = new String[200];
 
-    public FileManager(Intent intent,Context context) throws IOException {
+    public FileManager(Intent intent, Save context) throws IOException {
         this.intent=intent;
         this.context=context;
     }
@@ -28,8 +28,13 @@ public class FileManager {
     public void saveDataToFile() throws IOException {
         openFile();
         currentDate = Calendar.getInstance().getTime();
-        writeData = intent.getStringExtra("score");
-        Log.d(null, writeData);
+        writeData = intent.getStringArrayExtra("score");
+//        Log.d(null, String.valueOf(writeData.length));
+//        for(int i=0;i<writeData.length;i++){
+//            if(writeData[i]!=null){
+//                Log.d(null, writeData[i]);
+//            }
+//        }
         writeDataToFile();
     }
 
@@ -43,7 +48,11 @@ public class FileManager {
     }
 
     private void writeDataToFile() throws IOException {
-        outputStreamWriter.write(currentDate +" "+writeData+"\n");
+        for(int i=0;i<writeData.length;i=i+2){
+            if(writeData[i]!=null){
+                outputStreamWriter.write(currentDate +" "+writeData[i]+" "+writeData[i+1]+"\n");
+            }
+        }
         outputStreamWriter.write(10);
         outputStreamWriter.close();
     }

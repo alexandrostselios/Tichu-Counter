@@ -44,10 +44,15 @@ public class GUI extends AppCompatActivity {
     private boolean win = false;
     private int error=0;
 
+    private int i,j;
+    private String[] scoreArray = new String[200];
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        i=0;
+        j=0;
         createButtons();
         createEditText();
         createCheckBox();
@@ -70,7 +75,8 @@ public class GUI extends AppCompatActivity {
                 return true;
             case R.id.menu_save_game:
                 Intent intent = new Intent(GUI.this, Save.class);
-                intent.putExtra("score","Team 1: "+tichuCounter.getScoreTeam1()+" Team 2: "+tichuCounter.getScoreTeam2());
+                intent.putExtra("score",scoreArray);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 //Toast.makeText(GUI.this, "Save Game is Selected", Toast.LENGTH_SHORT).show();
                 return true;
@@ -181,6 +187,9 @@ public class GUI extends AppCompatActivity {
         if(error==0){
             TextScore1.setText(String.valueOf(tichuCounter.getScoreTeam1()));
             TextScore2.setText(String.valueOf(tichuCounter.getScoreTeam2()));
+            scoreArray[i]=String.valueOf(tichuCounter.getScoreTeam1());
+            scoreArray[++i]=String.valueOf(tichuCounter.getScoreTeam2());
+            i++;
             clear();
         }else {
             error = 0;
