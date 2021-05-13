@@ -2,14 +2,21 @@ package alexandrostselios.tichucounter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+import android.os.Environment;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+
 import java.util.Calendar;
 import java.util.Date;
+
+import static android.os.Environment.DIRECTORY_DOCUMENTS;
+import static android.os.Environment.DIRECTORY_DOWNLOADS;
 
 public class FileManager {
 
@@ -29,12 +36,6 @@ public class FileManager {
         openFile();
         currentDate = Calendar.getInstance().getTime();
         writeData = intent.getStringArrayExtra("score");
-//        Log.d(null, String.valueOf(writeData.length));
-//        for(int i=0;i<writeData.length;i++){
-//            if(writeData[i]!=null){
-//                Log.d(null, writeData[i]);
-//            }
-//        }
         writeDataToFile();
     }
 
@@ -42,8 +43,11 @@ public class FileManager {
 
     }
 
-    private void openFile() throws FileNotFoundException {
-        file = new File("/data/data/alexandrostselios.tichucounter/files/test.txt");
+    private void openFile() throws IOException {
+        //https://stackoverflow.com/questions/21216943/how-to-access-getfilesdir-as-an-environment-variable
+        //https://gist.github.com/lopspower/76421751b21594c69eb2
+        file = new File( String.valueOf(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)),"/tichu.txt");
+        Log.d(null,file.getAbsolutePath());
         outputStreamWriter = new OutputStreamWriter(context.openFileOutput(file.getName().toString(), Context.MODE_APPEND));
     }
 
@@ -54,6 +58,7 @@ public class FileManager {
             }
         }
         outputStreamWriter.write(10);
+        outputStreamWriter.flush();
         outputStreamWriter.close();
     }
 }
