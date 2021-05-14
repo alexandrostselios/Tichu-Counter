@@ -13,10 +13,15 @@ public class TichuCounter {
     private int error=0;
     private boolean win = false;
 
+    private EditText currentScore1;
+    private EditText currentScore2;
+
     Context context;
 
     public TichuCounter(Context mainActivity){
         this.context=mainActivity;
+        //this.currentScore1=currentScore1;
+        //this.currentScore2=currentScore2;
     }
 
     public void checkScore(EditText currentScore1, EditText currentScore2){
@@ -65,8 +70,8 @@ public class TichuCounter {
         error=1;
         setScoreTeam1(score1);
         setScoreTeam2(score2);
-        Log.d(null, "currentScore1: "+getScoreTeam1());
-        Log.d(null, "currentScore2: "+getScoreTeam2());
+        //Log.d(null, "currentScore1: "+getScoreTeam1());
+        //Log.d(null, "currentScore2: "+getScoreTeam2());
     }
 
     private void setScoreTeam1(int score1){
@@ -109,41 +114,46 @@ public class TichuCounter {
         }
     }
 
-    public void checkTichuStatus(int teamTichu1, CheckBox tichuCheck1, Button grandTichu1, int teamGrandTichu1, CheckBox grandTichuCheck1, int teamTichu2, CheckBox tichuCheck2, Button grandTichu2, int teamGrandTichu2, CheckBox grandTichuCheck2){
+    public boolean checkTichuStatus(int teamTichu1, CheckBox tichuCheck1, Button grandTichu1, int teamGrandTichu1, CheckBox grandTichuCheck1, int teamTichu2, CheckBox tichuCheck2, Button grandTichu2, int teamGrandTichu2, CheckBox grandTichuCheck2, EditText currentScore1, EditText currentScore2){
         if(error==1) {
             error=0;
-            if ((teamTichu1 == 1 && teamGrandTichu1 == 1 && tichuCheck1.isChecked() && grandTichuCheck1.isChecked())
-                    || (teamTichu1 == 1 && teamTichu2 == 1 && tichuCheck1.isChecked() && tichuCheck2.isChecked())
-                    || (teamTichu1 == 1 && teamGrandTichu2 == 1 && tichuCheck1.isChecked() && grandTichuCheck2.isChecked())
-                    || (teamTichu2 == 1 && teamGrandTichu2 == 1 && tichuCheck2.isChecked() && grandTichuCheck2.isChecked())
-                    || (teamGrandTichu1 == 1 && teamTichu2 == 1 && grandTichuCheck1.isChecked() && tichuCheck2.isChecked())
-                    || (teamGrandTichu1 == 1 && teamGrandTichu2 == 1 && grandTichuCheck1.isChecked() && grandTichuCheck2.isChecked())) {
+            if(!currentScore1.getText().toString().equals("") && !currentScore1.getText().toString().equals("")) {
+                if ((teamTichu1 == 1 && teamGrandTichu1 == 1 && tichuCheck1.isChecked() && grandTichuCheck1.isChecked())
+                        || (teamTichu1 == 1 && teamTichu2 == 1 && tichuCheck1.isChecked() && tichuCheck2.isChecked())
+                        || (teamTichu1 == 1 && teamGrandTichu2 == 1 && tichuCheck1.isChecked() && grandTichuCheck2.isChecked())
+                        || (teamTichu2 == 1 && teamGrandTichu2 == 1 && tichuCheck2.isChecked() && grandTichuCheck2.isChecked())
+                        || (teamGrandTichu1 == 1 && teamTichu2 == 1 && grandTichuCheck1.isChecked() && tichuCheck2.isChecked())
+                        || (teamGrandTichu1 == 1 && teamGrandTichu2 == 1 && grandTichuCheck1.isChecked() && grandTichuCheck2.isChecked())) {
 
-                Toast.makeText(context.getApplicationContext(), "Check Tichu/Grand", Toast.LENGTH_SHORT).show();
-                return;
+                    Toast.makeText(context.getApplicationContext(), "Check Tichu/Grand", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+                if (teamTichu1 == 1 && tichuCheck1.isChecked()) {
+                    //Log.d("null", "Team 1 TICHU");
+                    score1 += 100;
+                } else if (teamTichu1 == 1 && !tichuCheck1.isChecked()) {
+                    score1 -= 100;
+                }
+                if (teamGrandTichu1 == 1 && grandTichuCheck1.isChecked()) {
+                    //Log.d("null", "Team 1 GRAND TICHU");
+                    score1 += 200;
+                } else if (teamGrandTichu1 == 1 && !grandTichuCheck1.isChecked()) {
+                    score1 -= 200;
+                }
+                if (teamTichu2 == 1 && tichuCheck2.isChecked()) {
+                    score2 += 100;
+                } else if (teamTichu2 == 1 && !tichuCheck2.isChecked()) {
+                    score2 -= 100;
+                }
+                if (teamGrandTichu2 == 1 && grandTichuCheck2.isChecked()) {
+                    score2 += 200;
+                } else if (teamGrandTichu2 == 1 && !grandTichuCheck2.isChecked()) {
+                    score2 -= 200;
+                }
+                return true;
             }
-            if (teamTichu1 == 1 && tichuCheck1.isChecked()) {
-                Log.d("null", "Team 1 TICHU");
-                score1 += 100;
-            } else if (teamTichu1 == 1 && !tichuCheck1.isChecked()) {
-                score1 -= 100;
-            }
-            if (teamGrandTichu1 == 1 && grandTichuCheck1.isChecked()) {
-                Log.d("null", "Team 1 GRAND TICHU");
-                score1 += 200;
-            } else if (teamGrandTichu1 == 1 && !grandTichuCheck1.isChecked()) {
-                score1 -= 200;
-            }
-            if (teamTichu2 == 1 && tichuCheck2.isChecked()) {
-                score2 += 100;
-            } else if (teamTichu2 == 1 && !tichuCheck2.isChecked()) {
-                score2 -= 100;
-            }
-            if (teamGrandTichu2 == 1 && grandTichuCheck2.isChecked()) {
-                score2 += 200;
-            } else if (teamGrandTichu2 == 1 && !grandTichuCheck2.isChecked()) {
-                score2 -= 200;
-            }
+            return false;
         }
+        return false;
     }
 }

@@ -2,6 +2,7 @@ package alexandrostselios.tichucounter;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -108,7 +109,7 @@ public class GUI extends AppCompatActivity {
             public void onClick(View view) {
                 if(teamTichu1==0){
                     teamTichu1 = 1;
-                    tichu1.getBackground().setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
+                    tichu1.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
                 }else{
                     teamTichu1 = 0;
                     tichu1.getBackground().clearColorFilter();
@@ -123,7 +124,7 @@ public class GUI extends AppCompatActivity {
             public void onClick(View view) {
                 if(teamGrandTichu1==0){
                     teamGrandTichu1 = 1;
-                    grandTichu1.getBackground().setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
+                    grandTichu1.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
                 }else{
                     teamGrandTichu1 = 0;
                     grandTichu1.getBackground().clearColorFilter();
@@ -138,7 +139,7 @@ public class GUI extends AppCompatActivity {
             public void onClick(View view) {
                 if(teamTichu2==0){
                     teamTichu2 = 1;
-                    tichu2.getBackground().setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
+                    tichu2.getBackground().setColorFilter(Color.GREEN, PorterDuff.Mode.MULTIPLY);
                 }
                 else{
                     teamTichu2 = 0;
@@ -154,7 +155,7 @@ public class GUI extends AppCompatActivity {
             public void onClick(View view) {
                 if(teamGrandTichu2==0){
                     teamGrandTichu2 = 1;
-                    grandTichu2.getBackground().setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
+                    grandTichu2.getBackground().setColorFilter(Color.GREEN, PorterDuff.Mode.MULTIPLY);
                 }else{
                     teamGrandTichu2 = 0;
                     grandTichu2.getBackground().clearColorFilter();
@@ -183,17 +184,21 @@ public class GUI extends AppCompatActivity {
     }
 
     public void setScore() {
-        tichuCounter.checkTichuStatus(teamTichu1,tichuCheck1,grandTichu1,teamGrandTichu1,grandTichuCheck1,teamTichu2,tichuCheck2,grandTichu2,teamGrandTichu2,grandTichuCheck2);
-        if(error==0){
-            TextScore1.setText(String.valueOf(tichuCounter.getScoreTeam1()));
-            TextScore2.setText(String.valueOf(tichuCounter.getScoreTeam2()));
-            scoreArray[i]=String.valueOf(tichuCounter.getScoreTeam1());
-            scoreArray[++i]=String.valueOf(tichuCounter.getScoreTeam2());
-            i++;
+        if(tichuCounter.checkTichuStatus(teamTichu1,tichuCheck1,grandTichu1,teamGrandTichu1,grandTichuCheck1,teamTichu2,tichuCheck2,grandTichu2,teamGrandTichu2,grandTichuCheck2,currentScore1,currentScore2)){
+            if(error==0){
+                TextScore1.setText(String.valueOf(tichuCounter.getScoreTeam1()));
+                TextScore2.setText(String.valueOf(tichuCounter.getScoreTeam2()));
+                scoreArray[i]=String.valueOf(tichuCounter.getScoreTeam1());
+                scoreArray[++i]=String.valueOf(tichuCounter.getScoreTeam2());
+                i++;
+                clear();
+            }else {
+                error = 0;
+            }
+        }else{
             clear();
-        }else {
-            error = 0;
         }
+
     }
 
     private void clearScore() {
