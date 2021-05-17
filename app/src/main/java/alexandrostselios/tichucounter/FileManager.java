@@ -13,10 +13,16 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 
 import android.util.Log;
+import android.view.View;
+import android.view.Window;
+
 import java.util.Date;
 import java.util.Locale;
 
 import java.text.SimpleDateFormat;
+
+import android.app.ProgressDialog;
+import android.widget.ProgressBar;
 
 import static android.os.Environment.DIRECTORY_DOCUMENTS;
 
@@ -30,6 +36,8 @@ public class FileManager extends Activity {
     private String currentDate;
     private String[] writeData = new String[200];
 
+
+
     public FileManager(Intent intent, Save context) throws IOException {
         this.intent=intent;
         this.context=context;
@@ -37,10 +45,12 @@ public class FileManager extends Activity {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void saveDataToFile() throws IOException {
+
         currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
         writeData = intent.getStringArrayExtra("score");
         openFile();
         writeDataToFile();
+
     }
 
     public void readDataFromFile(){

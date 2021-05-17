@@ -85,7 +85,7 @@ public class GUI extends AppCompatActivity {
                 Toast.makeText(GUI.this, "Load Game is Selected", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_about:
-                Toast.makeText(GUI.this, "Version: 3.0", Toast.LENGTH_SHORT).show();
+                Toast.makeText(GUI.this, "Version: " + BuildConfig.VERSION_NAME, Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -93,7 +93,7 @@ public class GUI extends AppCompatActivity {
     }
 
     private void createButtons(){
-        roundScore = (TextView) findViewById(R.id.roundPoints);
+        roundScore = findViewById(R.id.roundPoints);
         roundScore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -102,7 +102,7 @@ public class GUI extends AppCompatActivity {
             }
         });
 
-        tichu1 = (Button) findViewById(R.id.tichu1);
+        tichu1 = findViewById(R.id.tichu1);
         tichu1.setBackgroundResource(android.R.drawable.btn_default);
         tichu1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,7 +117,7 @@ public class GUI extends AppCompatActivity {
             }
         });
 
-        grandTichu1 = (Button) findViewById(R.id.grandTichu1);
+        grandTichu1 = findViewById(R.id.grandTichu1);
         grandTichu1.setBackgroundResource(android.R.drawable.btn_default);
         grandTichu1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,7 +132,7 @@ public class GUI extends AppCompatActivity {
             }
         });
 
-        tichu2 = (Button) findViewById(R.id.tichu2);
+        tichu2 = findViewById(R.id.tichu2);
         tichu2.setBackgroundResource(android.R.drawable.btn_default);
         tichu2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,7 +148,7 @@ public class GUI extends AppCompatActivity {
             }
         });
 
-        grandTichu2 = (Button) findViewById(R.id.grandTichu2);
+        grandTichu2 = findViewById(R.id.grandTichu2);
         grandTichu2.setBackgroundResource(android.R.drawable.btn_default);
         grandTichu2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,17 +165,17 @@ public class GUI extends AppCompatActivity {
     }
 
     private void createEditText() {
-        currentScore1 = (EditText) findViewById(R.id.currentScore1);
-        currentScore2 = (EditText) findViewById(R.id.currentScore2);
+        currentScore1 = findViewById(R.id.currentScore1);
+        currentScore2 = findViewById(R.id.currentScore2);
         TextScore1 =  findViewById(R.id.score1EditText);
         TextScore2 =  findViewById(R.id.score2EditText);
     }
 
     private void createCheckBox(){
-        tichuCheck1 = (CheckBox) findViewById(R.id.tichuCheck1);
-        grandTichuCheck1 = (CheckBox) findViewById(R.id.grandTichuCheck1);
-        tichuCheck2 = (CheckBox) findViewById(R.id.tichuCheck2);
-        grandTichuCheck2 = (CheckBox) findViewById(R.id.grandTichuCheck2);
+        tichuCheck1 = findViewById(R.id.tichuCheck1);
+        grandTichuCheck1 = findViewById(R.id.grandTichuCheck1);
+        tichuCheck2 = findViewById(R.id.tichuCheck2);
+        grandTichuCheck2 = findViewById(R.id.grandTichuCheck2);
     }
 
     private void playGame(){
