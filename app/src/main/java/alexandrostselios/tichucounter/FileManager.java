@@ -7,10 +7,12 @@ import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.RequiresApi;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 import android.util.Log;
@@ -32,7 +34,7 @@ public class FileManager extends Activity {
     private Intent intent;
     private Context context;
     private File file;
-    private FileInputStream fileInputtStream;
+    private FileInputStream fileInputStream;
     private FileOutputStream fileOutputStream;
     private OutputStreamWriter outputStreamWriter;
     private String currentDate;
@@ -66,7 +68,6 @@ public class FileManager extends Activity {
     public void saveData() throws IOException {
         openFile();
         saveDataToFile();
-        //ok
     }
 
     private void saveDataToFile() throws IOException {
@@ -77,7 +78,7 @@ public class FileManager extends Activity {
         outputStreamWriter.write(new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date())+"\n");
         for(int i=0;i<writeData.length;i=i+2){
             if(writeData[i]!=null){
-                outputStreamWriter.write(line +") "+writeData[i]+" "+writeData[i+1]+"\n");
+                outputStreamWriter.write(line +":"+writeData[i]+":"+writeData[i+1]+"\n");
                 line++;
             }
         }
@@ -88,10 +89,24 @@ public class FileManager extends Activity {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void readData() throws IOException {
         openFile();
+        readDataFromFile();
     }
 
     private void readDataFromFile() throws IOException {
-        fileInputtStream = new FileInputStream(file);
-        fileInputtStream.read();
+        int i=1;
+        fileInputStream = new FileInputStream(file);
+        //Log.d(null,String.valueOf(file.toString()));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(fileInputStream));
+        StringBuilder out = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            if(line.startsWith(i+":")){
+                String[] details = line.split(":");
+                String team1 = details[1];
+                String team2 = details[2];
+                Log.d(null,team1 +" = "+ team2);
+                i++;
+            }
+        }
     }
 }

@@ -20,8 +20,6 @@ public class TichuCounter {
 
     public TichuCounter(Context mainActivity){
         this.context=mainActivity;
-        //this.currentScore1=currentScore1;
-        //this.currentScore2=currentScore2;
     }
 
     public void checkScore(EditText currentScore1, EditText currentScore2){
@@ -70,8 +68,6 @@ public class TichuCounter {
         error=1;
         setScoreTeam1(score1);
         setScoreTeam2(score2);
-        //Log.d(null, "currentScore1: "+getScoreTeam1());
-        //Log.d(null, "currentScore2: "+getScoreTeam2());
     }
 
     private void setScoreTeam1(int score1){
