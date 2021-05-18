@@ -66,6 +66,7 @@ public class FileManager extends Activity {
     public void saveData() throws IOException {
         openFile();
         saveDataToFile();
+        //ok
     }
 
     private void saveDataToFile() throws IOException {
