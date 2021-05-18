@@ -75,13 +75,17 @@ public class GUI extends AppCompatActivity {
                 clearScore();
                 return true;
             case R.id.menu_save_game:
-                Intent intent = new Intent(GUI.this, Save.class);
-                intent.putExtra("score",scoreArray);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                //Toast.makeText(GUI.this, "Save Game is Selected", Toast.LENGTH_SHORT).show();
+                Intent saveIntent = new Intent(GUI.this, Save.class);
+                saveIntent.putExtra("score",scoreArray);
+                saveIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(saveIntent);
+                Toast.makeText(GUI.this, "Game was Saved succesfully!!", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_load_game:
+                Intent loadIntent = new Intent(GUI.this, Load.class);
+                loadIntent.putExtra("score",scoreArray);
+                loadIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(loadIntent);
                 Toast.makeText(GUI.this, "Load Game is Selected", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_about:
