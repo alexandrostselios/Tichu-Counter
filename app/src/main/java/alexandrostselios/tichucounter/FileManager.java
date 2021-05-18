@@ -34,7 +34,6 @@ public class FileManager extends Activity {
     private Intent intent;
     private Context context;
     private File file;
-    private FileInputStream fileInputStream;
     private FileOutputStream fileOutputStream;
     private OutputStreamWriter outputStreamWriter;
     private String currentDate;
@@ -73,8 +72,7 @@ public class FileManager extends Activity {
     private void saveDataToFile() throws IOException {
         int line = 1;
         writeData = intent.getStringArrayExtra("score");
-        fileOutputStream = new FileOutputStream(file,append);
-        outputStreamWriter = new OutputStreamWriter(fileOutputStream);
+        outputStreamWriter = new OutputStreamWriter(new FileOutputStream(file,append));
         outputStreamWriter.write(new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date())+"\n");
         for(int i=0;i<writeData.length;i=i+2){
             if(writeData[i]!=null){
@@ -93,17 +91,16 @@ public class FileManager extends Activity {
     }
 
     private void readDataFromFile() throws IOException {
-        int i=1;
-        fileInputStream = new FileInputStream(file);
-        //Log.d(null,String.valueOf(file.toString()));
-        BufferedReader reader = new BufferedReader(new InputStreamReader(fileInputStream));
+        int i=1,j=1;
+        String[] score;
+        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
         StringBuilder out = new StringBuilder();
         String line;
         while ((line = reader.readLine()) != null) {
-            if(line.startsWith(i+":")){
-                String[] details = line.split(":");
-                String team1 = details[1];
-                String team2 = details[2];
+            if(line.startsWith((i)+":")){
+                score = line.split(":");
+                String team1 = score[j];
+                String team2 = score[j+1];
                 Log.d(null,team1 +" = "+ team2);
                 i++;
             }
