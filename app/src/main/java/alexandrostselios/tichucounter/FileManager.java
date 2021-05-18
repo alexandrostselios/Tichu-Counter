@@ -50,19 +50,6 @@ public class FileManager extends Activity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void saveDataToFile() throws IOException {
-        currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
-        writeData = intent.getStringArrayExtra("score");
-        openFile();
-        writeDataToFile();
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void readDataFromFile() throws IOException {
-       openFile();
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void openFile() throws IOException {
         //https://stackoverflow.com/questions/21216943/how-to-access-getfilesdir-as-an-environment-variable
         //https://gist.github.com/lopspower/76421751b21594c69eb2
@@ -75,11 +62,18 @@ public class FileManager extends Activity {
         }
     }
 
-    private void writeDataToFile() throws IOException {
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public void saveData() throws IOException {
+        openFile();
+        saveDataToFile();
+    }
+
+    private void saveDataToFile() throws IOException {
         int line = 1;
+        writeData = intent.getStringArrayExtra("score");
         fileOutputStream = new FileOutputStream(file,append);
         outputStreamWriter = new OutputStreamWriter(fileOutputStream);
-        outputStreamWriter.write(currentDate+"\n");
+        outputStreamWriter.write(new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date())+"\n");
         for(int i=0;i<writeData.length;i=i+2){
             if(writeData[i]!=null){
                 outputStreamWriter.write(line +") "+writeData[i]+" "+writeData[i+1]+"\n");
@@ -90,7 +84,12 @@ public class FileManager extends Activity {
         outputStreamWriter.close();
     }
 
-    private void readDataToFile() throws IOException {
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public void readData() throws IOException {
+        openFile();
+    }
+
+    private void readDataFromFile() throws IOException {
         fileInputtStream = new FileInputStream(file);
         fileInputtStream.read();
     }

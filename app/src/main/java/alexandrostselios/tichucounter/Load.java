@@ -21,7 +21,7 @@ public class Load extends Activity {
         // Create a FileManager object to use files
         try {
             FileManager fileManager = new FileManager(getIntent(),this);
-            fileManager.readDataFromFile();
+            fileManager.readData();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -20,7 +20,7 @@ public class Save extends Activity {
         // Create a FileManager object to use files
         try {
             FileManager fileManager = new FileManager(getIntent(),this);
-            fileManager.saveDataToFile();
+            fileManager.saveData();
         } catch (IOException e) {
             e.printStackTrace();
         }
