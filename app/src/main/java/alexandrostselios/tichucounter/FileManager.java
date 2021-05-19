@@ -25,7 +25,9 @@ import java.util.Locale;
 import java.text.SimpleDateFormat;
 
 import android.app.ProgressDialog;
+import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import static android.os.Environment.DIRECTORY_DOCUMENTS;
 
@@ -91,7 +93,7 @@ public class FileManager extends Activity {
     }
 
     private void readDataFromFile() throws IOException {
-        int i=1,j=1;
+        int i=1;
         String[] score;
         BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
         StringBuilder out = new StringBuilder();
@@ -99,8 +101,8 @@ public class FileManager extends Activity {
         while ((line = reader.readLine()) != null) {
             if(line.startsWith((i)+":")){
                 score = line.split(":");
-                String team1 = score[j];
-                String team2 = score[j+1];
+                String team1 = score[1];
+                String team2 = score[2];
                 Log.d(null,team1 +" = "+ team2);
                 i++;
             }
