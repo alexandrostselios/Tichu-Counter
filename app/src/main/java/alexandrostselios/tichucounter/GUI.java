@@ -85,8 +85,10 @@ public class GUI extends AppCompatActivity {
                 Intent loadIntent = new Intent(GUI.this, Load.class);
                 loadIntent.putExtra("score",scoreArray);
                 loadIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                //TextScore1.setText(String.valueOf(loadIntent.getStringExtra("text1")));
                 startActivity(loadIntent);
-                Toast.makeText(GUI.this, "Load Game is Selected", Toast.LENGTH_SHORT).show();
+                TextScore1.setText(String.valueOf(loadIntent.getStringExtra("text1")));
+                //Toast.makeText(GUI.this, "Load Game is Selected", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_about:
                 Toast.makeText(GUI.this, "Version: " + BuildConfig.VERSION_NAME, Toast.LENGTH_SHORT).show();

@@ -99,7 +99,7 @@ public class FileManager extends Activity {
         StringBuilder out = new StringBuilder();
         String line;
         while ((line = reader.readLine()) != null) {
-            if(line.startsWith((i)+":")){
+            if(line.startsWith(i+":")){
                 score = line.split(":");
                 String team1 = score[1];
                 String team2 = score[2];
@@ -107,5 +107,6 @@ public class FileManager extends Activity {
                 i++;
             }
         }
+        intent.putExtra("text","500");
     }
 }

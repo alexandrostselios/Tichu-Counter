@@ -1,6 +1,7 @@
 package alexandrostselios.tichucounter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +23,8 @@ public class Load extends Activity {
         try {
             FileManager fileManager = new FileManager(getIntent(),this);
             fileManager.readData();
+            //Log.d(null,getIntent().getStringExtra("text"));
+             this.getIntent().putExtra("text1",getIntent().getStringExtra("text"));
         } catch (IOException e) {
             e.printStackTrace();
         }
