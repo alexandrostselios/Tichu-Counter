@@ -95,18 +95,20 @@ public class FileManager extends Activity {
     private void readDataFromFile() throws IOException {
         int i=1;
         String[] score;
+        String line,team1 = null,team2=null;
         BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
         StringBuilder out = new StringBuilder();
-        String line;
         while ((line = reader.readLine()) != null) {
             if(line.startsWith(i+":")){
                 score = line.split(":");
-                String team1 = score[1];
-                String team2 = score[2];
-                //Log.d(null,team1 +" = "+ team2);
+                team1 = score[1];
+                team2 = score[2];
                 i++;
             }
         }
-        intent.putExtra("text","630");
+        if(team1 != null && team2 != null){
+            intent.putExtra("score1",team1);
+            intent.putExtra("score2",team2);
+        }
     }
 }

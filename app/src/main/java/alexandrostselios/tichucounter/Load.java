@@ -17,14 +17,15 @@ public class Load extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        //setContentView(R.layout.activity_main);
 
         // Create a FileManager object to use files
         try {
             FileManager fileManager = new FileManager(getIntent(),this);
             fileManager.readData();
-            EditText text = findViewById(R.id.score1EditText);
-            text.setText("100");
+            GUI.TextScore1.setText(getIntent().getStringExtra("score1"));
+            GUI.TextScore2.setText(getIntent().getStringExtra("score2"));
+            finish();
         } catch (IOException e) {
             e.printStackTrace();
         }

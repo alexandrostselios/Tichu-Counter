@@ -17,6 +17,8 @@ import android.widget.Toast;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.w3c.dom.Text;
+
 public class GUI extends AppCompatActivity {
     private TextView roundScore = null;
 
@@ -25,9 +27,9 @@ public class GUI extends AppCompatActivity {
     private Button tichu2 = null;
     private Button grandTichu2 = null;
 
-    private EditText TextScore1 = null;
+    public static EditText TextScore1 = null;
     private EditText currentScore1 = null;
-    private EditText TextScore2 = null;
+    public static EditText TextScore2 = null;
     private EditText currentScore2 = null;
 
     private CheckBox tichuCheck1 = null;
@@ -87,7 +89,7 @@ public class GUI extends AppCompatActivity {
                 loadIntent.putExtra("score",scoreArray);
                 loadIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(loadIntent);
-                //Toast.makeText(GUI.this, "Load Game is Selected", Toast.LENGTH_SHORT).show();
+                Toast.makeText(GUI.this, "Game was Loaded succesfully!!", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_about:
                 Toast.makeText(GUI.this, "Version: " + BuildConfig.VERSION_NAME, Toast.LENGTH_SHORT).show();
