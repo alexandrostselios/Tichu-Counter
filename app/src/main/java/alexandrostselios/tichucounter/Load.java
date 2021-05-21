@@ -7,6 +7,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.EditText;
 
 import java.io.IOException;
 
@@ -16,15 +17,14 @@ public class Load extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(null,"LOAD");
-        //setContentView(R.layout.activity_menu_load);
+        setContentView(R.layout.activity_main);
 
         // Create a FileManager object to use files
         try {
             FileManager fileManager = new FileManager(getIntent(),this);
             fileManager.readData();
-            //Log.d(null,getIntent().getStringExtra("text"));
-             this.getIntent().putExtra("text1",getIntent().getStringExtra("text"));
+            EditText text = findViewById(R.id.score1EditText);
+            text.setText("100");
         } catch (IOException e) {
             e.printStackTrace();
         }

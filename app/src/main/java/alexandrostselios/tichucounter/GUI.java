@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
@@ -85,9 +86,7 @@ public class GUI extends AppCompatActivity {
                 Intent loadIntent = new Intent(GUI.this, Load.class);
                 loadIntent.putExtra("score",scoreArray);
                 loadIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                //TextScore1.setText(String.valueOf(loadIntent.getStringExtra("text1")));
                 startActivity(loadIntent);
-                TextScore1.setText(String.valueOf(loadIntent.getStringExtra("text1")));
                 //Toast.makeText(GUI.this, "Load Game is Selected", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_about:

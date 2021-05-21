@@ -103,10 +103,10 @@ public class FileManager extends Activity {
                 score = line.split(":");
                 String team1 = score[1];
                 String team2 = score[2];
-                Log.d(null,team1 +" = "+ team2);
+                //Log.d(null,team1 +" = "+ team2);
                 i++;
             }
         }
-        intent.putExtra("text","500");
+        intent.putExtra("text","630");
     }
 }
