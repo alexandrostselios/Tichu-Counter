@@ -230,9 +230,12 @@
     app:layout_constraintTop_toTopOf="parent"
     app:layout_constraintVertical_bias="0.541" />
 
-
-
-
-    <!--android:buttonTint="#ff0000"-->
+    <TableRow
+        android:id="@+id/tableRow"
+        android:layout_width="409dp"
+        android:layout_height="264dp"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="466dp"
+        tools:ignore="MissingConstraints" />
 
 </android.support.constraint.ConstraintLayout>

@@ -3,6 +3,7 @@ package alexandrostselios.tichucounter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.RequiresApi;
@@ -15,23 +16,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
-import android.util.Log;
-import android.view.View;
-import android.view.Window;
-
-import java.util.Date;
-import java.util.Locale;
-
-import java.text.SimpleDateFormat;
-
-import android.app.ProgressDialog;
-import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-
+import static alexandrostselios.tichucounter.GUI.mydatabase;
 import static android.os.Environment.DIRECTORY_DOCUMENTS;
 
-public class FileManager extends Activity {
+public class DataBaseManager extends Activity {
 
     private Intent intent;
     private Context context;
@@ -42,12 +30,12 @@ public class FileManager extends Activity {
     private String[] writeData = new String[200];
     private boolean append;
 
-    public FileManager(Intent intent, Save context) throws IOException {
+    public DataBaseManager(Intent intent, Save context) throws IOException {
         this.intent=intent;
         this.context=context;
     }
 
-    public FileManager(Intent intent, Load context) throws IOException {
+    public DataBaseManager(Intent intent, Load context) throws IOException {
         this.intent=intent;
         this.context=context;
     }
@@ -68,22 +56,33 @@ public class FileManager extends Activity {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void saveData() throws IOException {
         openFile();
-        saveDataToFile();
+        saveDataToDataBase();
     }
 
-    private void saveDataToFile() throws IOException {
-        int line = 1;
+    private void saveDataToDataBase() throws IOException {
+        int line = 0;
         writeData = intent.getStringArrayExtra("score");
-        outputStreamWriter = new OutputStreamWriter(new FileOutputStream(file,append));
-        outputStreamWriter.write(new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date())+"\n");
-        for(int i=0;i<writeData.length;i=i+2){
+        //outputStreamWriter = new OutputStreamWriter(new FileOutputStream(file,append));
+        //outputStreamWriter.write(new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date())+"\n");
+
+        Cursor resultSet = mydatabase.rawQuery("SELECT max(ID) FROM Teams;",null);
+        resultSet.moveToFirst();
+        String index = resultSet.getString(0);
+        int i;
+        for(i=0;i<writeData.length;i=i+2){
             if(writeData[i]!=null){
-                outputStreamWriter.write(line +":"+writeData[i]+":"+writeData[i+1]+"\n");
+                mydatabase.execSQL("INSERT INTO ScoreHistory VALUES("+Integer.parseInt(index)+","+Integer.parseInt(writeData[i])+","+Integer.parseInt(writeData[i+1])+");");
+                //outputStreamWriter.write(line +":"+writeData[i]+":"+writeData[i+1]+"\n");
                 line++;
+            }else{
+                i=300;
             }
         }
-        outputStreamWriter.write(10);
-        outputStreamWriter.close();
+        //int temp = Integer.parseInt(index);
+        mydatabase.execSQL("INSERT INTO FinalScore VALUES("+Integer.parseInt(index)+","+Integer.parseInt(writeData[line-1])+","+Integer.parseInt(writeData[line])+");");
+
+        //outputStreamWriter.write(10);
+        //outputStreamWriter.close();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)

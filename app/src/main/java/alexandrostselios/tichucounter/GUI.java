@@ -2,16 +2,21 @@ package alexandrostselios.tichucounter;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.view.Menu;
@@ -19,7 +24,13 @@ import android.view.MenuItem;
 
 import org.w3c.dom.Text;
 
+import static android.os.Build.ID;
+
 public class GUI extends AppCompatActivity {
+
+    public static SQLiteDatabase mydatabase = null;
+    public static int currentID = 0;
+
     private TextView roundScore = null;
 
     private Button tichu1 = null;
@@ -57,9 +68,11 @@ public class GUI extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         i=0;
         j=0;
+        createDatabase();
         createButtons();
         createEditText();
         createCheckBox();
+        createHistory();
         playGame();
     }
 
@@ -97,6 +110,14 @@ public class GUI extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void createDatabase(){
+        mydatabase = openOrCreateDatabase("Game",MODE_PRIVATE,null);
+        mydatabase.execSQL("CREATE TABLE IF NOT EXISTS Teams(ID INTEGER PRIMARY KEY AUTOINCREMENT,Team1 VARCHAR,Team2 VARCHAR);");
+        mydatabase.execSQL("CREATE TABLE IF NOT EXISTS FinalScore(ID INTEGER NOT NULL,Score1 INTEGER, Score2 INTEGER, FOREIGN KEY (ID) REFERENCES Teams (ID));");
+        mydatabase.execSQL("CREATE TABLE IF NOT EXISTS ScoreHistory(ID INTEGER NOT NULL,Score1 INTEGER, Score2 INTEGER, FOREIGN KEY (ID) REFERENCES Teams (ID));");
+        mydatabase.execSQL("INSERT INTO Teams(Team1,Team2) VALUES('Alexandros','Tselios');");
     }
 
     private void createButtons(){
@@ -183,6 +204,10 @@ public class GUI extends AppCompatActivity {
         grandTichuCheck1 = findViewById(R.id.grandTichuCheck1);
         tichuCheck2 = findViewById(R.id.tichuCheck2);
         grandTichuCheck2 = findViewById(R.id.grandTichuCheck2);
+    }
+
+    private void createHistory() {
+        //https://www.tutorialspoint.com/add-and-remove-views-in-android-dynamically
     }
 
     private void playGame(){
