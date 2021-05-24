@@ -7,15 +7,15 @@ import android.database.Cursor;
 import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.RequiresApi;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 
+import static alexandrostselios.tichucounter.GUI.TextScore1;
 import static alexandrostselios.tichucounter.GUI.mydatabase;
 import static android.os.Environment.DIRECTORY_DOCUMENTS;
 
@@ -24,8 +24,6 @@ public class DataBaseManager extends Activity {
     private Intent intent;
     private Context context;
     private File file;
-    private FileOutputStream fileOutputStream;
-    private OutputStreamWriter outputStreamWriter;
     private String currentDate;
     private String[] writeData = new String[200];
     private boolean append;
@@ -62,54 +60,34 @@ public class DataBaseManager extends Activity {
     }
 
     private void saveDataToDataBase() throws IOException {
-        int line = 0;
+        int i;
+        String index;
         writeData = intent.getStringArrayExtra("score");
-        //outputStreamWriter = new OutputStreamWriter(new FileOutputStream(file,append));
-        //outputStreamWriter.write(new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date())+"\n");
-
         Cursor resultSet = mydatabase.rawQuery("SELECT max(ID) FROM Teams;",null);
         resultSet.moveToFirst();
-        String index = resultSet.getString(0);
-        int i;
+        index = resultSet.getString(0);
         for(i=0;i<writeData.length;i=i+2){
             if(writeData[i]!=null){
-                mydatabase.execSQL("INSERT INTO ScoreHistory VALUES("+Integer.parseInt(index)+","+Integer.parseInt(writeData[i])+","+Integer.parseInt(writeData[i+1])+");");
-                //outputStreamWriter.write(line +":"+writeData[i]+":"+writeData[i+1]+"\n");
-                line++;
+                mydatabase.execSQL("INSERT INTO ScoreHistory(TeamID,Score1,Score2) VALUES("+Integer.parseInt(index)+","+Integer.parseInt(writeData[i])+","+Integer.parseInt(writeData[i+1])+");");
             }else{
-                i=300;
+                break;
             }
         }
-        //int temp = Integer.parseInt(index);
-        mydatabase.execSQL("INSERT INTO FinalScore VALUES("+Integer.parseInt(index)+","+Integer.parseInt(writeData[line-1])+","+Integer.parseInt(writeData[line])+");");
-
-        //outputStreamWriter.write(10);
-        //outputStreamWriter.close();
+        mydatabase.execSQL("INSERT INTO FinalScore(TeamID,Score1,Score2) VALUES("+Integer.parseInt(index)+","+Integer.parseInt(writeData[i-2])+","+Integer.parseInt(writeData[i-1])+");");
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void readData() throws IOException {
-        openFile();
-        readDataFromFile();
-    }
-
-    private void readDataFromFile() throws IOException {
-        int i=1;
-        String[] score;
-        String line,team1 = null,team2=null;
-        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-        StringBuilder out = new StringBuilder();
-        while ((line = reader.readLine()) != null) {
-            if(line.startsWith(i+":")){
-                score = line.split(":");
-                team1 = score[1];
-                team2 = score[2];
-                i++;
-            }
-        }
-        if(team1 != null && team2 != null){
-            intent.putExtra("score1",team1);
-            intent.putExtra("score2",team2);
+    public void readData() {
+        String index;
+        Cursor resultSet = mydatabase.rawQuery("SELECT count(*) FROM FinalScore ORDER BY ID DESC;",null);
+        resultSet.moveToFirst();
+        if(resultSet.getInt(0)>0){
+            resultSet = mydatabase.rawQuery("SELECT * FROM FinalScore ORDER BY ID DESC;",null);
+            resultSet.moveToFirst();
+            index = resultSet.getString(2);
+            GUI.TextScore1.setText(index);
+            index = resultSet.getString(3);
+            GUI.TextScore2.setText(index);
+            Toast.makeText(this.context, "Game was Loaded succesfully!!", Toast.LENGTH_SHORT).show();
         }
     }
 }

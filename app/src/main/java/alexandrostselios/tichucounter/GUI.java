@@ -68,11 +68,11 @@ public class GUI extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         i=0;
         j=0;
-        createDatabase();
         createButtons();
         createEditText();
         createCheckBox();
         createHistory();
+        createDatabase();
         playGame();
     }
 
@@ -102,7 +102,6 @@ public class GUI extends AppCompatActivity {
                 loadIntent.putExtra("score",scoreArray);
                 loadIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(loadIntent);
-                Toast.makeText(GUI.this, "Game was Loaded succesfully!!", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_about:
                 Toast.makeText(GUI.this, "Version: " + BuildConfig.VERSION_NAME, Toast.LENGTH_SHORT).show();
@@ -115,8 +114,8 @@ public class GUI extends AppCompatActivity {
     public void createDatabase(){
         mydatabase = openOrCreateDatabase("Game",MODE_PRIVATE,null);
         mydatabase.execSQL("CREATE TABLE IF NOT EXISTS Teams(ID INTEGER PRIMARY KEY AUTOINCREMENT,Team1 VARCHAR,Team2 VARCHAR);");
-        mydatabase.execSQL("CREATE TABLE IF NOT EXISTS FinalScore(ID INTEGER NOT NULL,Score1 INTEGER, Score2 INTEGER, FOREIGN KEY (ID) REFERENCES Teams (ID));");
-        mydatabase.execSQL("CREATE TABLE IF NOT EXISTS ScoreHistory(ID INTEGER NOT NULL,Score1 INTEGER, Score2 INTEGER, FOREIGN KEY (ID) REFERENCES Teams (ID));");
+        mydatabase.execSQL("CREATE TABLE IF NOT EXISTS FinalScore(ID INTEGER PRIMARY KEY AUTOINCREMENT, TeamID INTEGER NOT NULL,Score1 INTEGER, Score2 INTEGER, FOREIGN KEY (ID) REFERENCES Teams (ID));");
+        mydatabase.execSQL("CREATE TABLE IF NOT EXISTS ScoreHistory(ID INTEGER PRIMARY KEY AUTOINCREMENT,TeamID INTEGER NOT NULL,Score1 INTEGER, Score2 INTEGER, FOREIGN KEY (ID) REFERENCES Teams (ID));");
         mydatabase.execSQL("INSERT INTO Teams(Team1,Team2) VALUES('Alexandros','Tselios');");
     }
 
