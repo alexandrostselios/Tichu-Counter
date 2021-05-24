@@ -40,6 +40,8 @@ public class DataBaseManager extends Activity {
         this.context=context;
     }
 
+
+
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void openFile() throws IOException {
         //https://stackoverflow.com/questions/21216943/how-to-access-getfilesdir-as-an-environment-variable

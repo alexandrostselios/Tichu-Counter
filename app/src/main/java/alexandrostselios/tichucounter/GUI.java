@@ -112,7 +112,7 @@ public class GUI extends AppCompatActivity {
         }
     }
 
-    private void createDatabase(){
+    public void createDatabase(){
         mydatabase = openOrCreateDatabase("Game",MODE_PRIVATE,null);
         mydatabase.execSQL("CREATE TABLE IF NOT EXISTS Teams(ID INTEGER PRIMARY KEY AUTOINCREMENT,Team1 VARCHAR,Team2 VARCHAR);");
         mydatabase.execSQL("CREATE TABLE IF NOT EXISTS FinalScore(ID INTEGER NOT NULL,Score1 INTEGER, Score2 INTEGER, FOREIGN KEY (ID) REFERENCES Teams (ID));");

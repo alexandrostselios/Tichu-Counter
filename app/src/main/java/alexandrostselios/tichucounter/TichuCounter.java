@@ -25,6 +25,23 @@ public class TichuCounter {
     public void checkScore(EditText currentScore1, EditText currentScore2){
         if(currentScore1!=null && currentScore2!=null) {
             int counter = 0;
+ /*           if(currentScore1.getText().toString()!=""){
+                if(currentScore2.getText().toString()!=""){
+                    if (Integer.parseInt(currentScore1.getText().toString()) + Integer.parseInt(currentScore2.getText().toString()) == 100) {
+                        score1 += Integer.parseInt(currentScore1.getText().toString());
+                        score2 += Integer.parseInt(currentScore2.getText().toString());
+                    } else {
+                        Toast.makeText(context, "Score Above 100 points", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }*/
+
+/*            if (Integer.parseInt(currentScore1.getText().toString()) + Integer.parseInt(currentScore2.getText().toString()) == 100) {
+                score1 += Integer.parseInt(currentScore1.getText().toString());
+                score2 += Integer.parseInt(currentScore2.getText().toString());
+            } else {
+                Toast.makeText(context, "Score Above 100 points", Toast.LENGTH_SHORT).show();
+            }*/
             if (!currentScore1.getText().toString().equals("")) {
                 if (currentScore1.isFocused()) {
                     if ((Integer.parseInt(currentScore1.getText().toString()) % 5) != 0 && (Integer.parseInt(currentScore1.getText().toString()) % 5) != 5) {
@@ -54,7 +71,7 @@ public class TichuCounter {
                 counter++;
             }
             if (counter >= 1) {
-                if (Integer.parseInt(currentScore1.getText().toString()) + Integer.parseInt(currentScore2.getText().toString()) <= 100) {
+                if (Integer.parseInt(currentScore1.getText().toString()) + Integer.parseInt(currentScore2.getText().toString()) == 100) {
                     score1 += Integer.parseInt(currentScore1.getText().toString());
                     score2 += Integer.parseInt(currentScore2.getText().toString());
                 } else {
