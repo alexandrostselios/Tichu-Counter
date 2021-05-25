@@ -58,7 +58,7 @@ public class GUI extends AppCompatActivity {
     private TichuCounter tichuCounter=null;
     private boolean win = false;
     private int error=0;
-
+    private Intent saveIntent;
     private int i,j;
     private String[] scoreArray = new String[200];
 
@@ -87,11 +87,15 @@ public class GUI extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.menu_revert:
+                Toast.makeText(GUI.this, "Revert Score!!", Toast.LENGTH_SHORT).show();
+                DataBaseManager.revertScore();
+                return true;
             case R.id.menu_new_game:
                 clearScore();
                 return true;
             case R.id.menu_save_game:
-                Intent saveIntent = new Intent(GUI.this, Save.class);
+                saveIntent = new Intent(GUI.this, Save.class);
                 saveIntent.putExtra("score",scoreArray);
                 saveIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(saveIntent);
@@ -215,7 +219,8 @@ public class GUI extends AppCompatActivity {
     }
 
     public void setScore() {
-        if(tichuCounter.checkTichuStatus(teamTichu1,tichuCheck1,grandTichu1,teamGrandTichu1,grandTichuCheck1,teamTichu2,tichuCheck2,grandTichu2,teamGrandTichu2,grandTichuCheck2,currentScore1,currentScore2)){
+        int flag = tichuCounter.checkTichuStatus(teamTichu1,tichuCheck1,grandTichu1,teamGrandTichu1,grandTichuCheck1,teamTichu2,tichuCheck2,grandTichu2,teamGrandTichu2,grandTichuCheck2,currentScore1,currentScore2);
+        if(flag == 1){
             if(error==0){
                 TextScore1.setText(String.valueOf(tichuCounter.getScoreTeam1()));
                 TextScore2.setText(String.valueOf(tichuCounter.getScoreTeam2()));
@@ -229,7 +234,6 @@ public class GUI extends AppCompatActivity {
         }else{
             clear();
         }
-
     }
 
     private void clearScore() {
@@ -256,6 +260,7 @@ public class GUI extends AppCompatActivity {
         currentScore1.setText(String.valueOf(""));
         currentScore2.setText(String.valueOf(""));
         playGame();
+
     }
 
     private void clear(){

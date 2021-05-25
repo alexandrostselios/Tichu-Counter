@@ -25,23 +25,13 @@ public class TichuCounter {
     public void checkScore(EditText currentScore1, EditText currentScore2){
         if(currentScore1!=null && currentScore2!=null) {
             int counter = 0;
- /*           if(currentScore1.getText().toString()!=""){
-                if(currentScore2.getText().toString()!=""){
-                    if (Integer.parseInt(currentScore1.getText().toString()) + Integer.parseInt(currentScore2.getText().toString()) == 100) {
-                        score1 += Integer.parseInt(currentScore1.getText().toString());
-                        score2 += Integer.parseInt(currentScore2.getText().toString());
-                    } else {
-                        Toast.makeText(context, "Score Above 100 points", Toast.LENGTH_SHORT).show();
-                    }
+            if(!currentScore1.getText().toString().equals("") && !currentScore2.getText().toString().equals("")){
+                if((Integer.parseInt(currentScore1.getText().toString())+(Integer.parseInt(currentScore2.getText().toString()) )) >100
+                        || (Integer.parseInt(currentScore1.getText().toString())+(Integer.parseInt(currentScore2.getText().toString()) )) < 100){
+                    Toast.makeText(context, "Score of both Teams is WRONG", Toast.LENGTH_SHORT).show();
+                    return;
                 }
-            }*/
-
-/*            if (Integer.parseInt(currentScore1.getText().toString()) + Integer.parseInt(currentScore2.getText().toString()) == 100) {
-                score1 += Integer.parseInt(currentScore1.getText().toString());
-                score2 += Integer.parseInt(currentScore2.getText().toString());
-            } else {
-                Toast.makeText(context, "Score Above 100 points", Toast.LENGTH_SHORT).show();
-            }*/
+            }
             if (!currentScore1.getText().toString().equals("")) {
                 if (currentScore1.isFocused()) {
                     if ((Integer.parseInt(currentScore1.getText().toString()) % 5) != 0 && (Integer.parseInt(currentScore1.getText().toString()) % 5) != 5) {
@@ -127,7 +117,7 @@ public class TichuCounter {
         }
     }
 
-    public boolean checkTichuStatus(int teamTichu1, CheckBox tichuCheck1, Button grandTichu1, int teamGrandTichu1, CheckBox grandTichuCheck1, int teamTichu2, CheckBox tichuCheck2, Button grandTichu2, int teamGrandTichu2, CheckBox grandTichuCheck2, EditText currentScore1, EditText currentScore2){
+    public int checkTichuStatus(int teamTichu1, CheckBox tichuCheck1, Button grandTichu1, int teamGrandTichu1, CheckBox grandTichuCheck1, int teamTichu2, CheckBox tichuCheck2, Button grandTichu2, int teamGrandTichu2, CheckBox grandTichuCheck2, EditText currentScore1, EditText currentScore2){
         if(error==1) {
             error=0;
             if(!currentScore1.getText().toString().equals("") && !currentScore1.getText().toString().equals("")) {
@@ -137,18 +127,17 @@ public class TichuCounter {
                         || (teamTichu2 == 1 && teamGrandTichu2 == 1 && tichuCheck2.isChecked() && grandTichuCheck2.isChecked())
                         || (teamGrandTichu1 == 1 && teamTichu2 == 1 && grandTichuCheck1.isChecked() && tichuCheck2.isChecked())
                         || (teamGrandTichu1 == 1 && teamGrandTichu2 == 1 && grandTichuCheck1.isChecked() && grandTichuCheck2.isChecked())) {
-
+                    score1 -= Integer.parseInt(currentScore1.getText().toString());
+                    score2 -= Integer.parseInt(currentScore2.getText().toString());
                     Toast.makeText(context.getApplicationContext(), "Check Tichu/Grand", Toast.LENGTH_SHORT).show();
-                    return false;
+                    return 0;
                 }
                 if (teamTichu1 == 1 && tichuCheck1.isChecked()) {
-                    //Log.d("null", "Team 1 TICHU");
                     score1 += 100;
                 } else if (teamTichu1 == 1 && !tichuCheck1.isChecked()) {
                     score1 -= 100;
                 }
                 if (teamGrandTichu1 == 1 && grandTichuCheck1.isChecked()) {
-                    //Log.d("null", "Team 1 GRAND TICHU");
                     score1 += 200;
                 } else if (teamGrandTichu1 == 1 && !grandTichuCheck1.isChecked()) {
                     score1 -= 200;
@@ -163,10 +152,10 @@ public class TichuCounter {
                 } else if (teamGrandTichu2 == 1 && !grandTichuCheck2.isChecked()) {
                     score2 -= 200;
                 }
-                return true;
+                return 1;
             }
-            return false;
+            return 0;
         }
-        return false;
+        return 0;
     }
 }

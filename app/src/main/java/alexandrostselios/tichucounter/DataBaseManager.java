@@ -90,4 +90,18 @@ public class DataBaseManager extends Activity {
             Toast.makeText(this.context, "Game was Loaded succesfully!!", Toast.LENGTH_SHORT).show();
         }
     }
+
+    public static void revertScore(){
+        String index;
+        Cursor resultSet = mydatabase.rawQuery("SELECT count(*) FROM FinalScore ORDER BY ID DESC;",null);
+        resultSet.moveToFirst();
+        if(resultSet.getInt(0)>0){
+            resultSet = mydatabase.rawQuery("SELECT * FROM FinalScore ORDER BY ID DESC;",null);
+            resultSet.moveToFirst();
+            index = resultSet.getString(2);
+            GUI.TextScore1.setText(index);
+            index = resultSet.getString(3);
+            GUI.TextScore2.setText(index);
+        }
+    }
 }
