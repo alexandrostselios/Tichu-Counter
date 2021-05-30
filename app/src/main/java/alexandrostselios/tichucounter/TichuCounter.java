@@ -77,11 +77,11 @@ public class TichuCounter {
         setScoreTeam2(score2);
     }
 
-    private void setScoreTeam1(int score1){
+    public void setScoreTeam1(int score1){
         this.score1=score1;
     }
 
-    private void setScoreTeam2(int score2){
+    public void setScoreTeam2(int score2){
         this.score2=score2;
     }
 

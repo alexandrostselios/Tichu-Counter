@@ -14,17 +14,6 @@ public class Load extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_main);
-
-        // Create a DataBaseManager object to use files
-        try {
-            DataBaseManager dataBaseManager = new DataBaseManager(getIntent(),this);
-            dataBaseManager.readData();
-            //GUI.TextScore1.setText(getIntent().getStringExtra("score1"));
-            //GUI.TextScore2.setText(getIntent().getStringExtra("score2"));
-            finish();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         finish();
     }
 }

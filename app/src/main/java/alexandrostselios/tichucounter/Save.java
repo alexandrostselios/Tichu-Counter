@@ -15,14 +15,6 @@ public class Save extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_menu_save);
-
-        // Create a DataBaseManager object to use files
-        try {
-            DataBaseManager dataBaseManager = new DataBaseManager(getIntent(),this);
-            dataBaseManager.saveData();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         finish();
     }
 }

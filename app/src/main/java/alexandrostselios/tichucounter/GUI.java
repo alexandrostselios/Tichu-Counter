@@ -28,8 +28,7 @@ import static android.os.Build.ID;
 
 public class GUI extends AppCompatActivity {
 
-    public static SQLiteDatabase mydatabase = null;
-    public static int currentID = 0;
+    private DataBaseManager dataBaseManager = null;
 
     private TextView roundScore = null;
 
@@ -71,7 +70,6 @@ public class GUI extends AppCompatActivity {
         createButtons();
         createEditText();
         createCheckBox();
-        createHistory();
         createDatabase();
         playGame();
     }
@@ -87,25 +85,26 @@ public class GUI extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_revert:
-                Toast.makeText(GUI.this, "Revert Score!!", Toast.LENGTH_SHORT).show();
-                DataBaseManager.revertScore();
-                return true;
             case R.id.menu_new_game:
                 clearScore();
                 return true;
             case R.id.menu_save_game:
-                saveIntent = new Intent(GUI.this, Save.class);
-                saveIntent.putExtra("score",scoreArray);
-                saveIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(saveIntent);
+                DataBaseManager.saveFinalScore(tichuCounter.getScoreTeam1(),tichuCounter.getScoreTeam2());
                 Toast.makeText(GUI.this, "Game was Saved succesfully!!", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_load_game:
-                Intent loadIntent = new Intent(GUI.this, Load.class);
-                loadIntent.putExtra("score",scoreArray);
-                loadIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(loadIntent);
+                dataBaseManager.loadScore();
+                tichuCounter.setScoreTeam1(Integer.parseInt(String.valueOf(TextScore1.getText())));
+                tichuCounter.setScoreTeam2(Integer.parseInt(String.valueOf(TextScore2.getText())));
+                dataBaseManager.saveRoundScore(tichuCounter.getScoreTeam1(),tichuCounter.getScoreTeam2());
+                Toast.makeText(GUI.this, "Game was Loaded succesfully!!", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.menu_revert:
+                Toast.makeText(GUI.this, "Revert Score!!", Toast.LENGTH_SHORT).show();
+                dataBaseManager.revertScore();
+                tichuCounter.setScoreTeam1(Integer.parseInt(String.valueOf(TextScore1.getText())));
+                tichuCounter.setScoreTeam2(Integer.parseInt(String.valueOf(TextScore2.getText())));
+                dataBaseManager.saveRoundScore(tichuCounter.getScoreTeam1(),tichuCounter.getScoreTeam2());
                 return true;
             case R.id.menu_about:
                 Toast.makeText(GUI.this, "Version: " + BuildConfig.VERSION_NAME, Toast.LENGTH_SHORT).show();
@@ -116,11 +115,8 @@ public class GUI extends AppCompatActivity {
     }
 
     public void createDatabase(){
-        mydatabase = openOrCreateDatabase("Game",MODE_PRIVATE,null);
-        mydatabase.execSQL("CREATE TABLE IF NOT EXISTS Teams(ID INTEGER PRIMARY KEY AUTOINCREMENT,Team1 VARCHAR,Team2 VARCHAR);");
-        mydatabase.execSQL("CREATE TABLE IF NOT EXISTS FinalScore(ID INTEGER PRIMARY KEY AUTOINCREMENT, TeamID INTEGER NOT NULL,Score1 INTEGER, Score2 INTEGER, FOREIGN KEY (ID) REFERENCES Teams (ID));");
-        mydatabase.execSQL("CREATE TABLE IF NOT EXISTS ScoreHistory(ID INTEGER PRIMARY KEY AUTOINCREMENT,TeamID INTEGER NOT NULL,Score1 INTEGER, Score2 INTEGER, FOREIGN KEY (ID) REFERENCES Teams (ID));");
-        mydatabase.execSQL("INSERT INTO Teams(Team1,Team2) VALUES('Alexandros','Tselios');");
+        dataBaseManager = new DataBaseManager(openOrCreateDatabase("Game",MODE_PRIVATE,null));
+        dataBaseManager.createDatabase();
     }
 
     private void createButtons(){
@@ -209,10 +205,6 @@ public class GUI extends AppCompatActivity {
         grandTichuCheck2 = findViewById(R.id.grandTichuCheck2);
     }
 
-    private void createHistory() {
-        //https://www.tutorialspoint.com/add-and-remove-views-in-android-dynamically
-    }
-
     private void playGame(){
         tichuCounter = new TichuCounter(GUI.this);
         tichuCounter.isWinner();
@@ -227,6 +219,7 @@ public class GUI extends AppCompatActivity {
                 scoreArray[i]=String.valueOf(tichuCounter.getScoreTeam1());
                 scoreArray[++i]=String.valueOf(tichuCounter.getScoreTeam2());
                 i++;
+                dataBaseManager.saveRoundScore(tichuCounter.getScoreTeam1(),tichuCounter.getScoreTeam2());
                 clear();
             }else {
                 error = 0;

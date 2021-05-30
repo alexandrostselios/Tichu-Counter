@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/menu_revert"
-        android:title="Revert Score" />
     <item android:id="@+id/menu_new_game"
         android:title="New Game" />
     <item android:id="@+id/menu_save_game"
         android:title="Save Game" />
     <item android:id="@+id/menu_load_game"
         android:title="Load Game" />
+    <item android:id="@+id/menu_revert"
+        android:title="Revert Score" />
     <item android:id="@+id/menu_about"
         android:title="About" />
 </menu>
