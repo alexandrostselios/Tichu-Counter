@@ -192,9 +192,9 @@ public class GUI extends AppCompatActivity {
     }
 
     private void createEditText() {
+        TextScore1 =  findViewById(R.id.score1EditText);
         currentScore1 = findViewById(R.id.currentScore1);
         currentScore2 = findViewById(R.id.currentScore2);
-        TextScore1 =  findViewById(R.id.score1EditText);
         TextScore2 =  findViewById(R.id.score2EditText);
     }
 

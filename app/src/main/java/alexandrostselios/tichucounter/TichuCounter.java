@@ -126,7 +126,10 @@ public class TichuCounter {
                         || (teamTichu1 == 1 && teamGrandTichu2 == 1 && tichuCheck1.isChecked() && grandTichuCheck2.isChecked())
                         || (teamTichu2 == 1 && teamGrandTichu2 == 1 && tichuCheck2.isChecked() && grandTichuCheck2.isChecked())
                         || (teamGrandTichu1 == 1 && teamTichu2 == 1 && grandTichuCheck1.isChecked() && tichuCheck2.isChecked())
-                        || (teamGrandTichu1 == 1 && teamGrandTichu2 == 1 && grandTichuCheck1.isChecked() && grandTichuCheck2.isChecked())) {
+                        || (teamGrandTichu1 == 1 && teamGrandTichu2 == 1 && grandTichuCheck1.isChecked() && grandTichuCheck2.isChecked())
+                        || (teamGrandTichu1 == 1 && teamTichu2 == 1 && grandTichuCheck1.isChecked() && tichuCheck2.isChecked() &&
+                            teamTichu1 == 1 && teamTichu2 == 1 && tichuCheck1.isChecked() && tichuCheck2.isChecked())
+                        ||(teamTichu1 == 1 && teamTichu2 == 1 && teamTichu2 == 1 && teamGrandTichu2 == 1 )) {
                     score1 -= Integer.parseInt(currentScore1.getText().toString());
                     score2 -= Integer.parseInt(currentScore2.getText().toString());
                     Toast.makeText(context.getApplicationContext(), "Check Tichu/Grand", Toast.LENGTH_SHORT).show();
