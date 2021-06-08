@@ -4,15 +4,40 @@ import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 public class DataBaseManager extends Activity {
 
-    private Context context;
+    private static Context context;
     private String[] writeData = new String[200];
     private static SQLiteDatabase mydatabase;
 
-    public DataBaseManager (SQLiteDatabase mydatabase){
+    public DataBaseManager (SQLiteDatabase mydatabase,Context context){
         this.mydatabase=mydatabase;
+        this.context = context;
+        String server_url = "http://alefhome.ddns.net:2374/connection.php";
+        RequestQueue queue;
+        queue = Volley.newRequestQueue(this.context);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, server_url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d(null,"======================================okOKokOKokOKokOKokOKokOKokOKokOKokOK");
+            }
+        },new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(null,"=======++++++++=========----------/");
+            }
+        });
+        queue.add(stringRequest);
     }
 
     /*public DataBaseManager(Intent intent, Save context) throws IOException {

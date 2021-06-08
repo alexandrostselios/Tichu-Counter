@@ -115,7 +115,7 @@ public class GUI extends AppCompatActivity {
     }
 
     public void createDatabase(){
-        dataBaseManager = new DataBaseManager(openOrCreateDatabase("Game",MODE_PRIVATE,null));
+        dataBaseManager = new DataBaseManager(openOrCreateDatabase("Game",MODE_PRIVATE,null),this);
         dataBaseManager.createDatabase();
     }
 
