@@ -26,7 +26,7 @@ public class DataBaseManager extends Activity {
     private static Context context;
     private String[] writeData = new String[200];
     private static SQLiteDatabase mydatabase;
-    private final String server_url = "http://alefhome.ddns.net:2374/insert.php";
+    private final String server_url = "http://alefhome.ddns.net:2374/tichucounter/insert.php";
     private RequestQueue queue = null;
 
     public DataBaseManager (SQLiteDatabase mydatabase,Context context){
