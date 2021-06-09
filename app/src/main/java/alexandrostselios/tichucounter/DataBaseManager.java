@@ -26,29 +26,20 @@ public class DataBaseManager extends Activity {
         String server_url = "http://alefhome.ddns.net:2374/connection.php";
         RequestQueue queue;
         queue = Volley.newRequestQueue(this.context);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, server_url, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, server_url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d(null,"======================================okOKokOKokOKokOKokOKokOKokOKokOKokOK");
+                Log.d(null,"Response: "+response);
             }
         },new Response.ErrorListener(){
             @Override
             public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
                 Log.d(null,"=======++++++++=========----------/");
             }
         });
         queue.add(stringRequest);
     }
-
-    /*public DataBaseManager(Intent intent, Save context) throws IOException {
-        this.intent=intent;
-        this.context=context;
-    }
-
-    public DataBaseManager(Intent intent, Load context) throws IOException {
-        this.intent=intent;
-        this.context=context;
-    }*/
 
     public void createDatabase() {
         mydatabase.execSQL("CREATE TABLE IF NOT EXISTS Teams(ID INTEGER PRIMARY KEY AUTOINCREMENT,Team1 VARCHAR,Team2 VARCHAR);");
