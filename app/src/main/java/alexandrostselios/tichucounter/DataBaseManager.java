@@ -7,12 +7,19 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class DataBaseManager extends Activity {
 
@@ -23,21 +30,41 @@ public class DataBaseManager extends Activity {
     public DataBaseManager (SQLiteDatabase mydatabase,Context context){
         this.mydatabase=mydatabase;
         this.context = context;
-        String server_url = "http://alefhome.ddns.net:2374/connection.php";
+        String server_url = "http://alefhome.ddns.net:2374/insert.php";
         RequestQueue queue;
         queue = Volley.newRequestQueue(this.context);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, server_url, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, server_url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d(null,"Response: "+response);
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    String success = jsonObject.getString("success");
+                    String message = jsonObject.getString("message");
+                    if(success.equals("1")){
+                        Log.d(null,"++++++++++++++++++++++++++++++");
+                        Log.d(null,"Response: : "+success + "\n Message: "+message);
+                        Log.d(null,"++++++++++++++++++++++++++++++");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         },new Response.ErrorListener(){
             @Override
             public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-                Log.d(null,"=======++++++++=========----------/");
+
+                Log.d(null,"=======++++++++=========----------/  "+error.getMessage());
             }
-        });
+        })
+        {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> params = new HashMap<>();
+                params.put("Team1",GUI.TextScore1.getText().toString());
+                params.put("Team2",GUI.TextScore2.getText().toString());
+                return params;
+            }
+        };
         queue.add(stringRequest);
     }
 
