@@ -230,6 +230,7 @@ public class GUI extends AppCompatActivity {
     }
 
     private void clearScore() {
+        DataBaseManager.start=0;
         score1=0;
         score2=0;
 

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -21,6 +22,8 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.sql.Types.NULL;
+
 public class DataBaseManager extends Activity {
 
     private static Context context;
@@ -28,13 +31,18 @@ public class DataBaseManager extends Activity {
     private static SQLiteDatabase mydatabase;
     private final String server_url = "http://alefhome.ddns.net:2374/tichucounter/insert.php";
     private RequestQueue queue = null;
+    public static int start = 0;
 
     public DataBaseManager (SQLiteDatabase mydatabase,Context context){
         this.mydatabase=mydatabase;
         this.context = context;
     }
 
-    private void writeToOnlineDatabase(String TeamID, int score1, int score2){
+    public DataBaseManager() {
+
+    }
+
+    private void writeToOnlineDatabase(int flag, String TeamID, int score1, int score2){
         queue = Volley.newRequestQueue(this.context);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, server_url, new Response.Listener<String>() {
             @Override
@@ -43,10 +51,22 @@ public class DataBaseManager extends Activity {
                     JSONObject jsonObject = new JSONObject(response);
                     String success = jsonObject.getString("success");
                     String message = jsonObject.getString("message");
+                    String teamID = jsonObject.getString("TeamID");
+                    String NameTeam1 = jsonObject.getString("NameTeam1");
+                    String NameTeam2 = jsonObject.getString("NameTeam2");
+                    String ScoreTeam1 = jsonObject.getString("ScoreTeam1");
+                    String ScoreTeam2 = jsonObject.getString("ScoreTeam2");
                     if(success.equals("1")){
                         Log.d(null,"++++++++++++++++++++++++++++++");
+                        Log.d(null,jsonObject.toString());
+                        Log.d(null,String.valueOf(flag));
                         Log.d(null,"Response: : " + success + "\n");
                         Log.d(null,"Message: " + message + "\n");
+                        Log.d(null, "TeamID: " + teamID + "\n");
+                        Log.d(null,"NameTeam1: " + NameTeam1 + "\n");
+                        Log.d(null,"NameTeam2: " + NameTeam2 + "\n");
+                        Log.d(null,"ScoreTeam1: " + ScoreTeam1 + "\n");
+                        Log.d(null,"ScoreTeam2: " + ScoreTeam2 + "\n");
                         Log.d(null,"++++++++++++++++++++++++++++++");
                     }
                 } catch (JSONException e) {
@@ -64,10 +84,20 @@ public class DataBaseManager extends Activity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String,String> params = new HashMap<>();
-                params.put("Table","FinalScore");
+                if(flag == 0){
+                    params.put("Table","Teams");
+                    params.put("NameTeam1","Alex");
+                    params.put("NameTeam2","Tselios");
+                }else if(flag == 1){
+                    params.put("Table","ScoreHistory");
+                    params.put("ScoreTeam1",String.valueOf(score1));
+                    params.put("ScoreTeam2",String.valueOf(score2));
+                }else{
+                    params.put("Table","FinalScore");
+                    params.put("ScoreTeam1",String.valueOf(score1));
+                    params.put("ScoreTeam2",String.valueOf(score2));
+                }
                 params.put("TeamID", TeamID);
-                params.put("Team1",String.valueOf(score1));
-                params.put("Team2",String.valueOf(score2));
                 return params;
             }
         };
@@ -87,7 +117,11 @@ public class DataBaseManager extends Activity {
         resultSet.moveToFirst();
         index = resultSet.getString(0);
         mydatabase.execSQL("INSERT INTO ScoreHistory(TeamID,Score1,Score2) VALUES("+Integer.parseInt(index)+","+score1+","+score2+");");
-        writeToOnlineDatabase(index,score1,score2);
+        if(start == 0){
+            writeToOnlineDatabase(0,index,0,0);
+            start=1;
+        }
+        writeToOnlineDatabase(1,index,score1,score2);
     }
 
     public static void revertScore(){
@@ -110,6 +144,8 @@ public class DataBaseManager extends Activity {
         resultSet.moveToFirst();
         index = resultSet.getString(0);
         mydatabase.execSQL("INSERT INTO FinalScore(TeamID,Score1,Score2) VALUES("+Integer.parseInt(index)+","+score1+","+score2+");");
+        DataBaseManager db = new DataBaseManager();
+        db.writeToOnlineDatabase(2,index,score1,score2);
     }
 
     public void loadScore() {
