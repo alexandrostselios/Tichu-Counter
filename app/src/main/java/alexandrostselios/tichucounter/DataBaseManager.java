@@ -32,6 +32,7 @@ public class DataBaseManager extends Activity {
     private final String server_url = "http://alefhome.ddns.net:2374/tichucounter/insert.php";
     private RequestQueue queue = null;
     public static int start = 0;
+    int MAX_SERIAL_THREAD_POOL_SIZE = 1;
 
     public DataBaseManager (SQLiteDatabase mydatabase,Context context){
         this.mydatabase=mydatabase;
@@ -47,31 +48,40 @@ public class DataBaseManager extends Activity {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, server_url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    String success = jsonObject.getString("success");
-                    String message = jsonObject.getString("message");
-                    String teamID = jsonObject.getString("TeamID");
-                    String NameTeam1 = jsonObject.getString("NameTeam1");
-                    String NameTeam2 = jsonObject.getString("NameTeam2");
-                    String ScoreTeam1 = jsonObject.getString("ScoreTeam1");
-                    String ScoreTeam2 = jsonObject.getString("ScoreTeam2");
-                    if(success.equals("1")){
-                        Log.d(null,"++++++++++++++++++++++++++++++");
-                        Log.d(null,jsonObject.toString());
-                        Log.d(null,String.valueOf(flag));
-                        Log.d(null,"Response: : " + success + "\n");
-                        Log.d(null,"Message: " + message + "\n");
-                        Log.d(null, "TeamID: " + teamID + "\n");
-                        Log.d(null,"NameTeam1: " + NameTeam1 + "\n");
-                        Log.d(null,"NameTeam2: " + NameTeam2 + "\n");
-                        Log.d(null,"ScoreTeam1: " + ScoreTeam1 + "\n");
-                        Log.d(null,"ScoreTeam2: " + ScoreTeam2 + "\n");
-                        Log.d(null,"++++++++++++++++++++++++++++++");
+                synchronized (new Object()){
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        String success = jsonObject.getString("success");
+                        String message = jsonObject.getString("message");
+                        String teamID = jsonObject.getString("TeamID");
+                        String NameTeam1 = jsonObject.getString("NameTeam1");
+                        String NameTeam2 = jsonObject.getString("NameTeam2");
+                        if(success.equals("1") && flag == 0){
+                            Log.d(null,"++++++++++++++++++++++++++++++");
+                            Log.d(null,jsonObject.toString());
+                            Log.d(null,"Response: : " + success + "\n");
+                            Log.d(null,"Message: " + message + "\n");
+                            Log.d(null, "TeamID: " + teamID + "\n");
+                            Log.d(null,"NameTeam1: " + NameTeam1 + "\n");
+                            Log.d(null,"NameTeam2: " + NameTeam2 + "\n");
+                            Log.d(null,"++++++++++++++++++++++++++++++");
+                        }else if(success.equals("1") && flag == 1){
+                            Log.d(null,"++++++++++++++++++++++++++++++");
+                            Log.d(null,jsonObject.toString());
+                            Log.d(null,"Response: : " + success + "\n");
+                            Log.d(null,"Message: " + message + "\n");
+                            Log.d(null, "TeamID: " + teamID + "\n");
+                            Log.d(null,"NameTeam1: " + NameTeam1 + "\n");
+                            Log.d(null,"NameTeam2: " + NameTeam2 + "\n");
+                            Log.d(null,"ScoreTeam1: " + jsonObject.getString("ScoreTeam1") + "\n");
+                            Log.d(null,"ScoreTeam2: " + jsonObject.getString("ScoreTeam2") + "\n");
+                            Log.d(null,"++++++++++++++++++++++++++++++");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
+
             }
         },new Response.ErrorListener(){
             @Override
@@ -116,11 +126,12 @@ public class DataBaseManager extends Activity {
         Cursor resultSet = mydatabase.rawQuery("SELECT max(ID) FROM Teams;",null);
         resultSet.moveToFirst();
         index = resultSet.getString(0);
-        mydatabase.execSQL("INSERT INTO ScoreHistory(TeamID,Score1,Score2) VALUES("+Integer.parseInt(index)+","+score1+","+score2+");");
+       // mydatabase.execSQL("INSERT INTO ScoreHistory(TeamID,Score1,Score2) VALUES("+Integer.parseInt(index)+","+score1+","+score2+");");
         if(start == 0){
             writeToOnlineDatabase(0,index,0,0);
             start=1;
         }
+        //Log.d(null,"------------------------------------------");
         writeToOnlineDatabase(1,index,score1,score2);
     }
 
