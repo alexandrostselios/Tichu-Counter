@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.widget.CursorAdapter;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -135,18 +136,23 @@ public class DataBaseManager extends Activity {
 
     public static void revertScore(){
         String score;
-        Cursor resultSet = mydatabase.rawQuery("SELECT count(*) FROM ScoreHistory ORDER BY ID DESC;",null);
-        resultSet.moveToFirst();
-        if(resultSet.getCount()>0){
+        Cursor resultSet1 = mydatabase.rawQuery("SELECT * FROM ScoreHistory ORDER BY ID DESC;",null);
+        //resultSet.moveToFirst();
+       // Cursor resultSet1 = mydatabase.rawQuery("SELECT * FROM ScoreHistory WHERE ID = (SELECT MAX(ID) FROM ScoreHistory) - 1;",null);
+        Log.d(null,resultSet1.getColumnName(0)+" "+resultSet1.getColumnName(1)
+        +" "+resultSet1.getColumnName(2)+" "+resultSet1.getColumnName(3));
+        resultSet1.moveToFirst();
+        Log.d(null, String.valueOf(resultSet1.getString(2)));
 
-            Cursor resultSet1 = mydatabase.rawQuery("SELECT * FROM ScoreHistory WHERE ID = (SELECT MAX(ID) FROM ScoreHistory) - 1;",null);
-            resultSet1.moveToFirst();
-            resultSet1.moveToPosition(1);
-            score = resultSet1.getString(2);
-            Log.d(null,"---------============== "+score);
-            GUI.TextScore1.setText(score);
-            score = resultSet1.getString(3);
-            GUI.TextScore2.setText(score);
+        if(resultSet1.getCount()>0){
+            //resultSet.close();
+            //Cursor resultSet1 = mydatabase.rawQuery("SELECT * FROM ScoreHistory WHERE ID = (SELECT MAX(ID) FROM ScoreHistory) - 1;",null);
+            //resultSet1.moveToFirst();
+            //score = resultSet1.getString(2);
+            Log.d(null,"---------============== "+resultSet1.getString(2));
+           GUI.TextScore1.setText("66");
+//            score = resultSet1.getString(3);
+//            GUI.TextScore2.setText(score);
         }
     }
 
