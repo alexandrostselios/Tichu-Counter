@@ -52,29 +52,29 @@ public class DataBaseManager extends Activity {
                     try {
                         JSONObject jsonObject = new JSONObject(response);
                         String success = jsonObject.getString("success");
-                        String message = jsonObject.getString("message");
+/*                        String message = jsonObject.getString("message");
                         String teamID = jsonObject.getString("TeamID");
                         String NameTeam1 = jsonObject.getString("NameTeam1");
-                        String NameTeam2 = jsonObject.getString("NameTeam2");
+                        String NameTeam2 = jsonObject.getString("NameTeam2");*/
                         if(success.equals("1") && flag == 0){
                             Log.d(null,"++++++++++++++++++++++++++++++");
                             Log.d(null,jsonObject.toString());
-                            Log.d(null,"Response: : " + success + "\n");
+/*                            Log.d(null,"Response: : " + success + "\n");
                             Log.d(null,"Message: " + message + "\n");
                             Log.d(null, "TeamID: " + teamID + "\n");
                             Log.d(null,"NameTeam1: " + NameTeam1 + "\n");
-                            Log.d(null,"NameTeam2: " + NameTeam2 + "\n");
+                            Log.d(null,"NameTeam2: " + NameTeam2 + "\n");*/
                             Log.d(null,"++++++++++++++++++++++++++++++");
                         }else if(success.equals("1") && flag == 1){
                             Log.d(null,"++++++++++++++++++++++++++++++");
                             Log.d(null,jsonObject.toString());
-                            Log.d(null,"Response: : " + success + "\n");
+/*                            Log.d(null,"Response: : " + success + "\n");
                             Log.d(null,"Message: " + message + "\n");
                             Log.d(null, "TeamID: " + teamID + "\n");
                             Log.d(null,"NameTeam1: " + NameTeam1 + "\n");
                             Log.d(null,"NameTeam2: " + NameTeam2 + "\n");
                             Log.d(null,"ScoreTeam1: " + jsonObject.getString("ScoreTeam1") + "\n");
-                            Log.d(null,"ScoreTeam2: " + jsonObject.getString("ScoreTeam2") + "\n");
+                            Log.d(null,"ScoreTeam2: " + jsonObject.getString("ScoreTeam2") + "\n");*/
                             Log.d(null,"++++++++++++++++++++++++++++++");
                         }
                     } catch (JSONException e) {
@@ -86,7 +86,6 @@ public class DataBaseManager extends Activity {
         },new Response.ErrorListener(){
             @Override
             public void onErrorResponse(VolleyError error) {
-
                 Log.d(null,"=======++++++++=========----------/  "+error.getMessage());
             }
         })
@@ -121,7 +120,7 @@ public class DataBaseManager extends Activity {
         mydatabase.execSQL("INSERT INTO Teams(Team1,Team2) VALUES('Alexandros','Tselios');");
     }
 
-    public void saveRoundScore(int score1,int score2){
+    public void  saveRoundScore(int score1,int score2){
         String index;
         Cursor resultSet = mydatabase.rawQuery("SELECT max(ID) FROM Teams;",null);
         resultSet.moveToFirst();
@@ -131,7 +130,6 @@ public class DataBaseManager extends Activity {
             writeToOnlineDatabase(0,index,0,0);
             start=1;
         }
-        //Log.d(null,"------------------------------------------");
         writeToOnlineDatabase(1,index,score1,score2);
     }
 
@@ -139,12 +137,15 @@ public class DataBaseManager extends Activity {
         String score;
         Cursor resultSet = mydatabase.rawQuery("SELECT count(*) FROM ScoreHistory ORDER BY ID DESC;",null);
         resultSet.moveToFirst();
-        if(resultSet.getInt(0)>0){
-            resultSet = mydatabase.rawQuery("SELECT * FROM ScoreHistory ORDER BY ID DESC;",null);
-            resultSet.moveToPosition(1);
-            score = resultSet.getString(2);
+        if(resultSet.getCount()>0){
+
+            Cursor resultSet1 = mydatabase.rawQuery("SELECT * FROM ScoreHistory WHERE ID = (SELECT MAX(ID) FROM ScoreHistory) - 1;",null);
+            resultSet1.moveToFirst();
+            resultSet1.moveToPosition(1);
+            score = resultSet1.getString(2);
+            Log.d(null,"---------============== "+score);
             GUI.TextScore1.setText(score);
-            score = resultSet.getString(3);
+            score = resultSet1.getString(3);
             GUI.TextScore2.setText(score);
         }
     }
