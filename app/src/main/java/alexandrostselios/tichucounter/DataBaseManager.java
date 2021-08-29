@@ -37,7 +37,7 @@ public class DataBaseManager extends Activity {
     private String[] writeData = new String[200];
     private static SQLiteDatabase mydatabase;
     private final String Write_Server_URL = "http://alefhome.ddns.net:2374/tichucounter/insert.php";
-    private final String Read_Server_URL = "http://alefhome.ddns.net:2374/tichucounter/retrieve.php";
+    private static String Read_Server_URL = "http://alefhome.ddns.net:2374/tichucounter/retrieve.php";
     private RequestQueue WriteQueue = null;
     private RequestQueue readQueue = null;
     public static int start = 0;
@@ -123,10 +123,6 @@ public class DataBaseManager extends Activity {
     }
 
     private void readFromOnlineDatabase(){
-        getJSON(Read_Server_URL);
-    }
-
-    private void getJSON(String read_server_url) {
         class GetJSON extends AsyncTask<Void, Void, String> {
             @Override
             protected void onPreExecute() {
@@ -146,7 +142,7 @@ public class DataBaseManager extends Activity {
             @Override
             protected String doInBackground(Void... voids) {
                 try {
-                    URL url = new URL(read_server_url);
+                    URL url = new URL(Read_Server_URL);
                     HttpURLConnection con = (HttpURLConnection) url.openConnection();
                     StringBuilder sb = new StringBuilder();
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -174,6 +170,7 @@ public class DataBaseManager extends Activity {
         teamsScore[1] = obj.getString("TeamID");
         teamsScore[2] = obj.getString("Score1");
         teamsScore[3] = obj.getString("Score2");
+        writeToOnlineDatabase(1,teamsScore[1],Integer.parseInt(teamsScore[2]),Integer.parseInt(teamsScore[3]));
         GUI.TextScore1.setText(teamsScore[2]);
         GUI.TextScore2.setText(teamsScore[3]);
     }
@@ -203,8 +200,6 @@ public class DataBaseManager extends Activity {
         Cursor resultSet = mydatabase.rawQuery("SELECT * FROM ScoreHistory ORDER BY ID DESC;",null);
         if(resultSet.getCount()>0){
             readFromOnlineDatabase();
-            //resultSet = mydatabase.rawQuery("SELECT * FROM ScoreHistory WHERE ID = (SELECT MAX(ID) FROM ScoreHistory) - 1;",null);
-            resultSet.moveToFirst();
 //            score = resultSet.getString(2);
 //            GUI.TextScore1.setText(score);
 //            score = resultSet.getString(3);
