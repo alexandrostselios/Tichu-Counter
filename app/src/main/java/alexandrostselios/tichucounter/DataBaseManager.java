@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.widget.CursorAdapter;
@@ -17,9 +18,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,8 +36,10 @@ public class DataBaseManager extends Activity {
     private static Context context;
     private String[] writeData = new String[200];
     private static SQLiteDatabase mydatabase;
-    private final String server_url = "http://alefhome.ddns.net:2374/tichucounter/insert.php";
-    private RequestQueue queue = null;
+    private final String Write_Server_URL = "http://alefhome.ddns.net:2374/tichucounter/insert.php";
+    private final String Read_Server_URL = "http://alefhome.ddns.net:2374/tichucounter/retrieve.php";
+    private RequestQueue WriteQueue = null;
+    private RequestQueue readQueue = null;
     public static int start = 0;
     int MAX_SERIAL_THREAD_POOL_SIZE = 1;
 
@@ -45,8 +53,8 @@ public class DataBaseManager extends Activity {
     }
 
     private void writeToOnlineDatabase(int flag, String TeamID, int score1, int score2){
-        queue = Volley.newRequestQueue(this.context);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, server_url, new Response.Listener<String>() {
+        WriteQueue = Volley.newRequestQueue(this.context);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, Write_Server_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 synchronized (new Object()){
@@ -111,7 +119,63 @@ public class DataBaseManager extends Activity {
                 return params;
             }
         };
-        queue.add(stringRequest);
+        WriteQueue.add(stringRequest);
+    }
+
+    private void readFromOnlineDatabase(){
+        getJSON(Read_Server_URL);
+    }
+
+    private void getJSON(String read_server_url) {
+        class GetJSON extends AsyncTask<Void, Void, String> {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                try {
+                    loadIntoListView(s);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            protected String doInBackground(Void... voids) {
+                try {
+                    URL url = new URL(read_server_url);
+                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                    StringBuilder sb = new StringBuilder();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                    String json;
+                    while ((json = bufferedReader.readLine()) != null) {
+                        sb.append(json + "\n");
+                    }
+                    //Log.d(null,"====++++++///// "+ sb.toString().trim());
+                    return sb.toString().trim();
+                } catch (Exception e) {
+                    return null;
+                }
+            }
+        }
+        GetJSON getJSON = new GetJSON();
+        getJSON.execute();
+    }
+
+    private void loadIntoListView(String json) throws JSONException {
+        JSONArray jsonArray = new JSONArray(json);
+        String[] teamsScore = new String[4];
+        JSONObject obj = jsonArray.getJSONObject(0);
+        Log.d(null,obj.toString());
+        teamsScore[0] = obj.getString("ID");
+        teamsScore[1] = obj.getString("TeamID");
+        teamsScore[2] = obj.getString("Score1");
+        teamsScore[3] = obj.getString("Score2");
+        GUI.TextScore1.setText(teamsScore[2]);
+        GUI.TextScore2.setText(teamsScore[3]);
     }
 
     public void createDatabase() {
@@ -126,7 +190,7 @@ public class DataBaseManager extends Activity {
         Cursor resultSet = mydatabase.rawQuery("SELECT max(ID) FROM Teams;",null);
         resultSet.moveToFirst();
         index = resultSet.getString(0);
-       // mydatabase.execSQL("INSERT INTO ScoreHistory(TeamID,Score1,Score2) VALUES("+Integer.parseInt(index)+","+score1+","+score2+");");
+        mydatabase.execSQL("INSERT INTO ScoreHistory(TeamID,Score1,Score2) VALUES("+Integer.parseInt(index)+","+score1+","+score2+");");
         if(start == 0){
             writeToOnlineDatabase(0,index,0,0);
             start=1;
@@ -134,26 +198,19 @@ public class DataBaseManager extends Activity {
         writeToOnlineDatabase(1,index,score1,score2);
     }
 
-    public static void revertScore(){
+    public void revertScore(){
         String score;
-        Cursor resultSet1 = mydatabase.rawQuery("SELECT * FROM ScoreHistory ORDER BY ID DESC;",null);
-        //resultSet.moveToFirst();
-       // Cursor resultSet1 = mydatabase.rawQuery("SELECT * FROM ScoreHistory WHERE ID = (SELECT MAX(ID) FROM ScoreHistory) - 1;",null);
-        Log.d(null,resultSet1.getColumnName(0)+" "+resultSet1.getColumnName(1)
-        +" "+resultSet1.getColumnName(2)+" "+resultSet1.getColumnName(3));
-        resultSet1.moveToFirst();
-        Log.d(null, String.valueOf(resultSet1.getString(2)));
-
-        if(resultSet1.getCount()>0){
-            //resultSet.close();
-            //Cursor resultSet1 = mydatabase.rawQuery("SELECT * FROM ScoreHistory WHERE ID = (SELECT MAX(ID) FROM ScoreHistory) - 1;",null);
-            //resultSet1.moveToFirst();
-            //score = resultSet1.getString(2);
-            Log.d(null,"---------============== "+resultSet1.getString(2));
-           GUI.TextScore1.setText("66");
-//            score = resultSet1.getString(3);
+        Cursor resultSet = mydatabase.rawQuery("SELECT * FROM ScoreHistory ORDER BY ID DESC;",null);
+        if(resultSet.getCount()>0){
+            readFromOnlineDatabase();
+            //resultSet = mydatabase.rawQuery("SELECT * FROM ScoreHistory WHERE ID = (SELECT MAX(ID) FROM ScoreHistory) - 1;",null);
+            resultSet.moveToFirst();
+//            score = resultSet.getString(2);
+//            GUI.TextScore1.setText(score);
+//            score = resultSet.getString(3);
 //            GUI.TextScore2.setText(score);
         }
+        resultSet.close();
     }
 
     public static void saveFinalScore(int score1,int score2) {
@@ -170,6 +227,7 @@ public class DataBaseManager extends Activity {
         String index;
         Cursor resultSet = mydatabase.rawQuery("SELECT count(*) FROM FinalScore ORDER BY ID DESC;",null);
         resultSet.moveToFirst();
+        Log.d(null,String.valueOf(resultSet.getInt(0)));
         if(resultSet.getInt(0)>0){
             resultSet = mydatabase.rawQuery("SELECT * FROM FinalScore ORDER BY ID DESC;",null);
             resultSet.moveToFirst();
@@ -178,5 +236,6 @@ public class DataBaseManager extends Activity {
             index = resultSet.getString(3);
             GUI.TextScore2.setText(index);
         }
+        resultSet.close();
     }
 }
