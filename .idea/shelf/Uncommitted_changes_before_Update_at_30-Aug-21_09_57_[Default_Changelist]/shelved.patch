@@ -1,0 +1,141 @@
+Index: app/src/main/java/alexandrostselios/tichucounter/DataBaseManager.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package alexandrostselios.tichucounter;\r\n\r\nimport android.app.Activity;\r\nimport android.content.Context;\r\nimport android.database.Cursor;\r\nimport android.database.sqlite.SQLiteDatabase;\r\nimport android.provider.ContactsContract;\r\nimport android.util.Log;\r\nimport android.widget.CursorAdapter;\r\nimport android.widget.Toast;\r\n\r\nimport com.android.volley.AuthFailureError;\r\nimport com.android.volley.Request;\r\nimport com.android.volley.RequestQueue;\r\nimport com.android.volley.Response;\r\nimport com.android.volley.VolleyError;\r\nimport com.android.volley.toolbox.StringRequest;\r\nimport com.android.volley.toolbox.Volley;\r\n\r\nimport org.json.JSONException;\r\nimport org.json.JSONObject;\r\n\r\nimport java.util.HashMap;\r\nimport java.util.Map;\r\n\r\nimport static java.sql.Types.NULL;\r\n\r\npublic class DataBaseManager extends Activity {\r\n\r\n    private static Context context;\r\n    private String[] writeData = new String[200];\r\n    private static SQLiteDatabase mydatabase;\r\n    private final String server_url = \"http://alefhome.ddns.net:2374/tichucounter/insert.php\";\r\n    private RequestQueue queue = null;\r\n    public static int start = 0;\r\n    int MAX_SERIAL_THREAD_POOL_SIZE = 1;\r\n\r\n    public DataBaseManager (SQLiteDatabase mydatabase,Context context){\r\n        this.mydatabase=mydatabase;\r\n        this.context = context;\r\n    }\r\n\r\n    public DataBaseManager() {\r\n\r\n    }\r\n\r\n    private void writeToOnlineDatabase(int flag, String TeamID, int score1, int score2){\r\n        queue = Volley.newRequestQueue(this.context);\r\n        StringRequest stringRequest = new StringRequest(Request.Method.POST, server_url, new Response.Listener<String>() {\r\n            @Override\r\n            public void onResponse(String response) {\r\n                synchronized (new Object()){\r\n                    try {\r\n                        JSONObject jsonObject = new JSONObject(response);\r\n                        String success = jsonObject.getString(\"success\");\r\n/*                        String message = jsonObject.getString(\"message\");\r\n                        String teamID = jsonObject.getString(\"TeamID\");\r\n                        String NameTeam1 = jsonObject.getString(\"NameTeam1\");\r\n                        String NameTeam2 = jsonObject.getString(\"NameTeam2\");*/\r\n                        if(success.equals(\"1\") && flag == 0){\r\n                            Log.d(null,\"++++++++++++++++++++++++++++++\");\r\n                            Log.d(null,jsonObject.toString());\r\n/*                            Log.d(null,\"Response: : \" + success + \"\\n\");\r\n                            Log.d(null,\"Message: \" + message + \"\\n\");\r\n                            Log.d(null, \"TeamID: \" + teamID + \"\\n\");\r\n                            Log.d(null,\"NameTeam1: \" + NameTeam1 + \"\\n\");\r\n                            Log.d(null,\"NameTeam2: \" + NameTeam2 + \"\\n\");*/\r\n                            Log.d(null,\"++++++++++++++++++++++++++++++\");\r\n                        }else if(success.equals(\"1\") && flag == 1){\r\n                            Log.d(null,\"++++++++++++++++++++++++++++++\");\r\n                            Log.d(null,jsonObject.toString());\r\n/*                            Log.d(null,\"Response: : \" + success + \"\\n\");\r\n                            Log.d(null,\"Message: \" + message + \"\\n\");\r\n                            Log.d(null, \"TeamID: \" + teamID + \"\\n\");\r\n                            Log.d(null,\"NameTeam1: \" + NameTeam1 + \"\\n\");\r\n                            Log.d(null,\"NameTeam2: \" + NameTeam2 + \"\\n\");\r\n                            Log.d(null,\"ScoreTeam1: \" + jsonObject.getString(\"ScoreTeam1\") + \"\\n\");\r\n                            Log.d(null,\"ScoreTeam2: \" + jsonObject.getString(\"ScoreTeam2\") + \"\\n\");*/\r\n                            Log.d(null,\"++++++++++++++++++++++++++++++\");\r\n                        }\r\n                    } catch (JSONException e) {\r\n                        e.printStackTrace();\r\n                    }\r\n                }\r\n\r\n            }\r\n        },new Response.ErrorListener(){\r\n            @Override\r\n            public void onErrorResponse(VolleyError error) {\r\n                Log.d(null,\"=======++++++++=========----------/  \"+error.getMessage());\r\n            }\r\n        })\r\n        {\r\n            @Override\r\n            protected Map<String, String> getParams() throws AuthFailureError {\r\n                Map<String,String> params = new HashMap<>();\r\n                if(flag == 0){\r\n                    params.put(\"Table\",\"Teams\");\r\n                    params.put(\"NameTeam1\",\"Alex\");\r\n                    params.put(\"NameTeam2\",\"Tselios\");\r\n                }else if(flag == 1){\r\n                    params.put(\"Table\",\"ScoreHistory\");\r\n                    params.put(\"ScoreTeam1\",String.valueOf(score1));\r\n                    params.put(\"ScoreTeam2\",String.valueOf(score2));\r\n                }else{\r\n                    params.put(\"Table\",\"FinalScore\");\r\n                    params.put(\"ScoreTeam1\",String.valueOf(score1));\r\n                    params.put(\"ScoreTeam2\",String.valueOf(score2));\r\n                }\r\n                params.put(\"TeamID\", TeamID);\r\n                return params;\r\n            }\r\n        };\r\n        queue.add(stringRequest);\r\n    }\r\n\r\n    public void createDatabase() {\r\n        mydatabase.execSQL(\"CREATE TABLE IF NOT EXISTS Teams(ID INTEGER PRIMARY KEY AUTOINCREMENT,Team1 VARCHAR,Team2 VARCHAR);\");\r\n        mydatabase.execSQL(\"CREATE TABLE IF NOT EXISTS FinalScore(ID INTEGER PRIMARY KEY AUTOINCREMENT, TeamID INTEGER NOT NULL,Score1 INTEGER, Score2 INTEGER, FOREIGN KEY (ID) REFERENCES Teams (ID));\");\r\n        mydatabase.execSQL(\"CREATE TABLE IF NOT EXISTS ScoreHistory(ID INTEGER PRIMARY KEY AUTOINCREMENT,TeamID INTEGER NOT NULL,Score1 INTEGER, Score2 INTEGER, FOREIGN KEY (ID) REFERENCES Teams (ID));\");\r\n        mydatabase.execSQL(\"INSERT INTO Teams(Team1,Team2) VALUES('Alexandros','Tselios');\");\r\n    }\r\n\r\n    public void  saveRoundScore(int score1,int score2){\r\n        String index;\r\n        Cursor resultSet = mydatabase.rawQuery(\"SELECT max(ID) FROM Teams;\",null);\r\n        resultSet.moveToFirst();\r\n        index = resultSet.getString(0);\r\n       // mydatabase.execSQL(\"INSERT INTO ScoreHistory(TeamID,Score1,Score2) VALUES(\"+Integer.parseInt(index)+\",\"+score1+\",\"+score2+\");\");\r\n        if(start == 0){\r\n            writeToOnlineDatabase(0,index,0,0);\r\n            start=1;\r\n        }\r\n        writeToOnlineDatabase(1,index,score1,score2);\r\n    }\r\n\r\n    public static void revertScore(){\r\n        String score;\r\n        Cursor resultSet1 = mydatabase.rawQuery(\"SELECT * FROM ScoreHistory ORDER BY ID DESC;\",null);\r\n        //resultSet.moveToFirst();\r\n       // Cursor resultSet1 = mydatabase.rawQuery(\"SELECT * FROM ScoreHistory WHERE ID = (SELECT MAX(ID) FROM ScoreHistory) - 1;\",null);\r\n        Log.d(null,resultSet1.getColumnName(0)+\" \"+resultSet1.getColumnName(1)\r\n        +\" \"+resultSet1.getColumnName(2)+\" \"+resultSet1.getColumnName(3));\r\n        resultSet1.moveToFirst();\r\n        Log.d(null, String.valueOf(resultSet1.getString(2)));\r\n\r\n        if(resultSet1.getCount()>0){\r\n            //resultSet.close();\r\n            //Cursor resultSet1 = mydatabase.rawQuery(\"SELECT * FROM ScoreHistory WHERE ID = (SELECT MAX(ID) FROM ScoreHistory) - 1;\",null);\r\n            //resultSet1.moveToFirst();\r\n            //score = resultSet1.getString(2);\r\n            Log.d(null,\"---------============== \"+resultSet1.getString(2));\r\n           GUI.TextScore1.setText(\"66\");\r\n//            score = resultSet1.getString(3);\r\n//            GUI.TextScore2.setText(score);\r\n        }\r\n    }\r\n\r\n    public static void saveFinalScore(int score1,int score2) {\r\n        String index;\r\n        Cursor resultSet = mydatabase.rawQuery(\"SELECT max(ID) FROM Teams;\",null);\r\n        resultSet.moveToFirst();\r\n        index = resultSet.getString(0);\r\n        mydatabase.execSQL(\"INSERT INTO FinalScore(TeamID,Score1,Score2) VALUES(\"+Integer.parseInt(index)+\",\"+score1+\",\"+score2+\");\");\r\n        DataBaseManager db = new DataBaseManager();\r\n        db.writeToOnlineDatabase(2,index,score1,score2);\r\n    }\r\n\r\n    public void loadScore() {\r\n        String index;\r\n        Cursor resultSet = mydatabase.rawQuery(\"SELECT count(*) FROM FinalScore ORDER BY ID DESC;\",null);\r\n        resultSet.moveToFirst();\r\n        if(resultSet.getInt(0)>0){\r\n            resultSet = mydatabase.rawQuery(\"SELECT * FROM FinalScore ORDER BY ID DESC;\",null);\r\n            resultSet.moveToFirst();\r\n            index = resultSet.getString(2);\r\n            GUI.TextScore1.setText(index);\r\n            index = resultSet.getString(3);\r\n            GUI.TextScore2.setText(index);\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/alexandrostselios/tichucounter/DataBaseManager.java b/app/src/main/java/alexandrostselios/tichucounter/DataBaseManager.java
+--- a/app/src/main/java/alexandrostselios/tichucounter/DataBaseManager.java	(revision 2c9aa8c6886dc02d3a966da7bc70f36022603248)
++++ b/app/src/main/java/alexandrostselios/tichucounter/DataBaseManager.java	(date 1629988006276)
+@@ -4,10 +4,11 @@
+ import android.content.Context;
+ import android.database.Cursor;
+ import android.database.sqlite.SQLiteDatabase;
+-import android.provider.ContactsContract;
++import android.database.DatabaseUtils;
++import android.database.sqlite.SQLiteOpenHelper;
++import android.database.sqlite.SQLiteDatabase;
+ import android.util.Log;
+-import android.widget.CursorAdapter;
+-import android.widget.Toast;
++
+ 
+ import com.android.volley.AuthFailureError;
+ import com.android.volley.Request;
+@@ -82,6 +83,75 @@
+                         e.printStackTrace();
+                     }
+                 }
++            }
++        },new Response.ErrorListener(){
++            @Override
++            public void onErrorResponse(VolleyError error) {
++                Log.d(null,"=======++++++++=========----------/  "+error.getMessage());
++            }
++        })
++        {
++            @Override
++            protected Map<String, String> getParams() throws AuthFailureError {
++                Map<String,String> params = new HashMap<>();
++                if(flag == 0){
++                    params.put("Table","Teams");
++                    params.put("NameTeam1","Alex");
++                    params.put("NameTeam2","Tselios");
++                }else if(flag == 1){
++                    params.put("Table","ScoreHistory");
++                    params.put("ScoreTeam1",String.valueOf(score1));
++                    params.put("ScoreTeam2",String.valueOf(score2));
++                }else{
++                    params.put("Table","FinalScore");
++                    params.put("ScoreTeam1",String.valueOf(score1));
++                    params.put("ScoreTeam2",String.valueOf(score2));
++                }
++                params.put("TeamID", TeamID);
++                return params;
++            }
++        };
++        queue.add(stringRequest);
++    }
++
++    private void readFromOnlineDatabase(int flag, String TeamID, int score1, int score2){
++        queue = Volley.newRequestQueue(this.context);
++        StringRequest stringRequest = new StringRequest(Request.Method.POST, server_url, new Response.Listener<String>() {
++            @Override
++            public void onResponse(String response) {
++                synchronized (new Object()){
++                    try {
++                        JSONObject jsonObject = new JSONObject(response);
++                        String success = jsonObject.getString("success");
++/*                        String message = jsonObject.getString("message");
++                        String teamID = jsonObject.getString("TeamID");
++                        String NameTeam1 = jsonObject.getString("NameTeam1");
++                        String NameTeam2 = jsonObject.getString("NameTeam2");*/
++                        if(success.equals("1") && flag == 0){
++                            Log.d(null,"++++++++++++++++++++++++++++++");
++                            Log.d(null,jsonObject.toString());
++/*                            Log.d(null,"Response: : " + success + "\n");
++                            Log.d(null,"Message: " + message + "\n");
++                            Log.d(null, "TeamID: " + teamID + "\n");
++                            Log.d(null,"NameTeam1: " + NameTeam1 + "\n");
++                            Log.d(null,"NameTeam2: " + NameTeam2 + "\n");*/
++                            Log.d(null,"++++++++++++++++++++++++++++++");
++                        }else if(success.equals("1") && flag == 1){
++                            Log.d(null,"++++++++++++++++++++++++++++++");
++                            Log.d(null,jsonObject.toString());
++/*                            Log.d(null,"Response: : " + success + "\n");
++                            Log.d(null,"Message: " + message + "\n");
++                            Log.d(null, "TeamID: " + teamID + "\n");
++                            Log.d(null,"NameTeam1: " + NameTeam1 + "\n");
++                            Log.d(null,"NameTeam2: " + NameTeam2 + "\n");
++                            Log.d(null,"ScoreTeam1: " + jsonObject.getString("ScoreTeam1") + "\n");
++                            Log.d(null,"ScoreTeam2: " + jsonObject.getString("ScoreTeam2") + "\n");*/
++                            Log.d(null,"++++++++++++++++++++++++++++++");
++                        }
++                    } catch (JSONException e) {
++                        e.printStackTrace();
++                    }
++                }
+ 
+             }
+         },new Response.ErrorListener(){
+@@ -137,13 +207,11 @@
+     public static void revertScore(){
+         String score;
+         Cursor resultSet1 = mydatabase.rawQuery("SELECT * FROM ScoreHistory ORDER BY ID DESC;",null);
+-        //resultSet.moveToFirst();
+-       // Cursor resultSet1 = mydatabase.rawQuery("SELECT * FROM ScoreHistory WHERE ID = (SELECT MAX(ID) FROM ScoreHistory) - 1;",null);
+         Log.d(null,resultSet1.getColumnName(0)+" "+resultSet1.getColumnName(1)
+         +" "+resultSet1.getColumnName(2)+" "+resultSet1.getColumnName(3));
++        GUI.TextScore1.setText("65");
+         resultSet1.moveToFirst();
+-        Log.d(null, String.valueOf(resultSet1.getString(2)));
+-
++        //Log.d(null, String.valueOf(resultSet1.getString(2)));
+         if(resultSet1.getCount()>0){
+             //resultSet.close();
+             //Cursor resultSet1 = mydatabase.rawQuery("SELECT * FROM ScoreHistory WHERE ID = (SELECT MAX(ID) FROM ScoreHistory) - 1;",null);
+Index: app/src/main/java/alexandrostselios/tichucounter/GUI.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package alexandrostselios.tichucounter;\r\n\r\nimport android.annotation.SuppressLint;\r\nimport android.content.Intent;\r\nimport android.database.Cursor;\r\nimport android.database.sqlite.SQLiteDatabase;\r\nimport android.graphics.Color;\r\nimport android.graphics.PorterDuff;\r\nimport android.support.v7.app.AppCompatActivity;\r\nimport android.os.Bundle;\r\nimport android.util.Log;\r\nimport android.view.LayoutInflater;\r\nimport android.view.MenuInflater;\r\nimport android.view.View;\r\nimport android.widget.Button;\r\nimport android.widget.CheckBox;\r\nimport android.widget.EditText;\r\nimport android.widget.LinearLayout;\r\nimport android.widget.TableRow;\r\nimport android.widget.TextView;\r\nimport android.widget.Toast;\r\nimport android.view.Menu;\r\nimport android.view.MenuItem;\r\n\r\nimport org.w3c.dom.Text;\r\n\r\nimport static android.os.Build.ID;\r\n\r\npublic class GUI extends AppCompatActivity {\r\n\r\n    private DataBaseManager dataBaseManager = null;\r\n\r\n    private TextView roundScore = null;\r\n\r\n    private Button tichu1 = null;\r\n    private Button grandTichu1 = null;\r\n    private Button tichu2 = null;\r\n    private Button grandTichu2 = null;\r\n\r\n    public static EditText TextScore1 = null;\r\n    private EditText currentScore1 = null;\r\n    public static EditText TextScore2 = null;\r\n    private EditText currentScore2 = null;\r\n\r\n    private CheckBox tichuCheck1 = null;\r\n    private CheckBox grandTichuCheck1 = null;\r\n    private CheckBox tichuCheck2 = null;\r\n    private CheckBox grandTichuCheck2 = null;\r\n\r\n    private int teamTichu1 = 0;\r\n    private int teamGrandTichu1 = 0;\r\n    private int score1 = 0;\r\n    private int teamTichu2 = 0;\r\n    private int teamGrandTichu2 = 0;\r\n    private int score2 = 0;\r\n\r\n    private TichuCounter tichuCounter=null;\r\n    private boolean win = false;\r\n    private int error=0;\r\n    private Intent saveIntent;\r\n    private int i,j;\r\n    private String[] scoreArray = new String[200];\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_main);\r\n        i=0;\r\n        j=0;\r\n        createButtons();\r\n        createEditText();\r\n        createCheckBox();\r\n        createDatabase();\r\n        playGame();\r\n    }\r\n\r\n    @SuppressLint(\"ResourceType\")\r\n    @Override\r\n    public boolean onCreateOptionsMenu(Menu menu) {\r\n        MenuInflater menuInflater = getMenuInflater();\r\n        menuInflater.inflate(R.layout.menu, menu);\r\n        return true;\r\n    }\r\n\r\n    @Override\r\n    public boolean onOptionsItemSelected(MenuItem item) {\r\n        switch (item.getItemId()) {\r\n            case R.id.menu_new_game:\r\n                clearScore();\r\n                return true;\r\n            case R.id.menu_save_game:\r\n                DataBaseManager.saveFinalScore(tichuCounter.getScoreTeam1(),tichuCounter.getScoreTeam2());\r\n                Toast.makeText(GUI.this, \"Game was Saved succesfully!!\", Toast.LENGTH_SHORT).show();\r\n                return true;\r\n            case R.id.menu_load_game:\r\n                dataBaseManager.loadScore();\r\n                tichuCounter.setScoreTeam1(Integer.parseInt(String.valueOf(TextScore1.getText())));\r\n                tichuCounter.setScoreTeam2(Integer.parseInt(String.valueOf(TextScore2.getText())));\r\n                dataBaseManager.saveRoundScore(tichuCounter.getScoreTeam1(),tichuCounter.getScoreTeam2());\r\n                Toast.makeText(GUI.this, \"Game was Loaded succesfully!!\", Toast.LENGTH_SHORT).show();\r\n                return true;\r\n            case R.id.menu_revert:\r\n                Toast.makeText(GUI.this, \"Revert Score!!\", Toast.LENGTH_SHORT).show();\r\n                dataBaseManager.revertScore();\r\n                tichuCounter.setScoreTeam1(Integer.parseInt(String.valueOf(TextScore1.getText())));\r\n                tichuCounter.setScoreTeam2(Integer.parseInt(String.valueOf(TextScore2.getText())));\r\n                //dataBaseManager.saveRoundScore(tichuCounter.getScoreTeam1(),tichuCounter.getScoreTeam2());\r\n                return true;\r\n            case R.id.menu_about:\r\n                Toast.makeText(GUI.this, \"Version: \" + BuildConfig.VERSION_NAME, Toast.LENGTH_SHORT).show();\r\n                return true;\r\n            default:\r\n                return super.onOptionsItemSelected(item);\r\n        }\r\n    }\r\n\r\n    public void createDatabase(){\r\n        dataBaseManager = new DataBaseManager(openOrCreateDatabase(\"Game\",MODE_PRIVATE,null),this);\r\n        dataBaseManager.createDatabase();\r\n    }\r\n\r\n    private void createButtons(){\r\n        roundScore = findViewById(R.id.roundPoints);\r\n        roundScore.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                tichuCounter.checkScore(currentScore1,currentScore2);\r\n                setScore();\r\n            }\r\n        });\r\n\r\n        tichu1 = findViewById(R.id.tichu1);\r\n        tichu1.setBackgroundResource(android.R.drawable.btn_default);\r\n        tichu1.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                if(teamTichu1==0){\r\n                    teamTichu1 = 1;\r\n                    tichu1.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);\r\n                }else{\r\n                    teamTichu1 = 0;\r\n                    tichu1.getBackground().clearColorFilter();\r\n                }\r\n            }\r\n        });\r\n\r\n        grandTichu1 = findViewById(R.id.grandTichu1);\r\n        grandTichu1.setBackgroundResource(android.R.drawable.btn_default);\r\n        grandTichu1.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                if(teamGrandTichu1==0){\r\n                    teamGrandTichu1 = 1;\r\n                    grandTichu1.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);\r\n                }else{\r\n                    teamGrandTichu1 = 0;\r\n                    grandTichu1.getBackground().clearColorFilter();\r\n                }\r\n            }\r\n        });\r\n\r\n        tichu2 = findViewById(R.id.tichu2);\r\n        tichu2.setBackgroundResource(android.R.drawable.btn_default);\r\n        tichu2.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                if(teamTichu2==0){\r\n                    teamTichu2 = 1;\r\n                    tichu2.getBackground().setColorFilter(Color.GREEN, PorterDuff.Mode.MULTIPLY);\r\n                }\r\n                else{\r\n                    teamTichu2 = 0;\r\n                    tichu2.getBackground().clearColorFilter();\r\n                }\r\n            }\r\n        });\r\n\r\n        grandTichu2 = findViewById(R.id.grandTichu2);\r\n        grandTichu2.setBackgroundResource(android.R.drawable.btn_default);\r\n        grandTichu2.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                if(teamGrandTichu2==0){\r\n                    teamGrandTichu2 = 1;\r\n                    grandTichu2.getBackground().setColorFilter(Color.GREEN, PorterDuff.Mode.MULTIPLY);\r\n                }else{\r\n                    teamGrandTichu2 = 0;\r\n                    grandTichu2.getBackground().clearColorFilter();\r\n                }\r\n            }\r\n        });\r\n    }\r\n\r\n    private void createEditText() {\r\n        TextScore1 =  findViewById(R.id.score1EditText);\r\n        currentScore1 = findViewById(R.id.currentScore1);\r\n        currentScore2 = findViewById(R.id.currentScore2);\r\n        TextScore2 =  findViewById(R.id.score2EditText);\r\n    }\r\n\r\n    private void createCheckBox(){\r\n        tichuCheck1 = findViewById(R.id.tichuCheck1);\r\n        grandTichuCheck1 = findViewById(R.id.grandTichuCheck1);\r\n        tichuCheck2 = findViewById(R.id.tichuCheck2);\r\n        grandTichuCheck2 = findViewById(R.id.grandTichuCheck2);\r\n    }\r\n\r\n    private void playGame(){\r\n        tichuCounter = new TichuCounter(GUI.this);\r\n        tichuCounter.isWinner();\r\n    }\r\n\r\n    public void setScore() {\r\n        int flag = tichuCounter.checkTichuStatus(teamTichu1,tichuCheck1,grandTichu1,teamGrandTichu1,grandTichuCheck1,teamTichu2,tichuCheck2,grandTichu2,teamGrandTichu2,grandTichuCheck2,currentScore1,currentScore2);\r\n        if(flag == 1){\r\n            if(error==0){\r\n                TextScore1.setText(String.valueOf(tichuCounter.getScoreTeam1()));\r\n                TextScore2.setText(String.valueOf(tichuCounter.getScoreTeam2()));\r\n                scoreArray[i]=String.valueOf(tichuCounter.getScoreTeam1());\r\n                scoreArray[++i]=String.valueOf(tichuCounter.getScoreTeam2());\r\n                i++;\r\n                dataBaseManager.saveRoundScore(tichuCounter.getScoreTeam1(),tichuCounter.getScoreTeam2());\r\n                clear();\r\n            }else {\r\n                error = 0;\r\n            }\r\n        }else{\r\n            clear();\r\n        }\r\n    }\r\n\r\n    private void clearScore() {\r\n        DataBaseManager.start=0;\r\n        score1=0;\r\n        score2=0;\r\n\r\n        TextScore1.setText(String.valueOf(\"\"));\r\n        TextScore2.setText(String.valueOf(\"\"));\r\n\r\n        teamTichu1=0;\r\n        teamGrandTichu1=0;\r\n        tichuCheck1.setChecked(false);\r\n        grandTichuCheck1.setChecked(false);\r\n\r\n        teamTichu2=0;\r\n        teamGrandTichu2=0;\r\n        tichuCheck2.setChecked(false);\r\n        grandTichuCheck2.setChecked(false);\r\n\r\n        tichu1.getBackground().clearColorFilter();\r\n        tichu2.getBackground().clearColorFilter();\r\n        grandTichu1.getBackground().clearColorFilter();\r\n        grandTichu2.getBackground().clearColorFilter();\r\n        currentScore1.setText(String.valueOf(\"\"));\r\n        currentScore2.setText(String.valueOf(\"\"));\r\n        playGame();\r\n\r\n    }\r\n\r\n    private void clear(){\r\n        teamTichu1=0;\r\n        teamGrandTichu1=0;\r\n        tichuCheck1.setChecked(false);\r\n        grandTichuCheck1.setChecked(false);\r\n\r\n        teamTichu2=0;\r\n        teamGrandTichu2=0;\r\n        tichuCheck2.setChecked(false);\r\n        grandTichuCheck2.setChecked(false);\r\n\r\n        tichu1.getBackground().clearColorFilter();\r\n        tichu2.getBackground().clearColorFilter();\r\n        grandTichu1.getBackground().clearColorFilter();\r\n        grandTichu2.getBackground().clearColorFilter();\r\n        currentScore1.setText(String.valueOf(\"\"));\r\n        currentScore2.setText(String.valueOf(\"\"));\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/alexandrostselios/tichucounter/GUI.java b/app/src/main/java/alexandrostselios/tichucounter/GUI.java
+--- a/app/src/main/java/alexandrostselios/tichucounter/GUI.java	(revision 2c9aa8c6886dc02d3a966da7bc70f36022603248)
++++ b/app/src/main/java/alexandrostselios/tichucounter/GUI.java	(date 1629986004486)
+@@ -100,10 +100,10 @@
+                 Toast.makeText(GUI.this, "Game was Loaded succesfully!!", Toast.LENGTH_SHORT).show();
+                 return true;
+             case R.id.menu_revert:
+-                Toast.makeText(GUI.this, "Revert Score!!", Toast.LENGTH_SHORT).show();
+                 dataBaseManager.revertScore();
+-                tichuCounter.setScoreTeam1(Integer.parseInt(String.valueOf(TextScore1.getText())));
+-                tichuCounter.setScoreTeam2(Integer.parseInt(String.valueOf(TextScore2.getText())));
++                Toast.makeText(GUI.this, "Revert Score!!", Toast.LENGTH_SHORT).show();
++                //tichuCounter.setScoreTeam1(Integer.parseInt(String.valueOf(TextScore1.getText())));
++                //tichuCounter.setScoreTeam2(Integer.parseInt(String.valueOf(TextScore2.getText())));
+                 //dataBaseManager.saveRoundScore(tichuCounter.getScoreTeam1(),tichuCounter.getScoreTeam2());
+                 return true;
+             case R.id.menu_about:

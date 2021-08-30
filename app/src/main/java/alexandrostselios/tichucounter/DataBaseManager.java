@@ -35,6 +35,7 @@ public class DataBaseManager extends Activity {
 
     private static Context context;
     private String[] writeData = new String[200];
+    private String[] teamsScore = new String[4];
     private static SQLiteDatabase mydatabase;
     private final String Write_Server_URL = "http://alefhome.ddns.net:2374/tichucounter/insert.php";
     private static String Read_Server_URL = "http://alefhome.ddns.net:2374/tichucounter/retrieve.php";
@@ -163,16 +164,12 @@ public class DataBaseManager extends Activity {
 
     private void loadIntoListView(String json) throws JSONException {
         JSONArray jsonArray = new JSONArray(json);
-        String[] teamsScore = new String[4];
         JSONObject obj = jsonArray.getJSONObject(0);
         Log.d(null,obj.toString());
         teamsScore[0] = obj.getString("ID");
         teamsScore[1] = obj.getString("TeamID");
         teamsScore[2] = obj.getString("Score1");
         teamsScore[3] = obj.getString("Score2");
-        writeToOnlineDatabase(1,teamsScore[1],Integer.parseInt(teamsScore[2]),Integer.parseInt(teamsScore[3]));
-        GUI.TextScore1.setText(teamsScore[2]);
-        GUI.TextScore2.setText(teamsScore[3]);
     }
 
     public void createDatabase() {
@@ -200,10 +197,11 @@ public class DataBaseManager extends Activity {
         Cursor resultSet = mydatabase.rawQuery("SELECT * FROM ScoreHistory ORDER BY ID DESC;",null);
         if(resultSet.getCount()>0){
             readFromOnlineDatabase();
-//            score = resultSet.getString(2);
-//            GUI.TextScore1.setText(score);
-//            score = resultSet.getString(3);
-//            GUI.TextScore2.setText(score);
+            GUI.TextScore1.setText(teamsScore[2]);
+            GUI.TextScore2.setText(teamsScore[3]);
+            writeToOnlineDatabase(1,teamsScore[1],Integer.parseInt(teamsScore[2]),Integer.parseInt(teamsScore[3]));
+            //score = resultSet.getString(2);
+            //score = resultSet.getString(3);
         }
         resultSet.close();
     }
