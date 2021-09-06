@@ -149,7 +149,7 @@ public class DataBaseManager extends Activity {
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
                     String json;
                     while ((json = bufferedReader.readLine()) != null) {
-                        sb.append(json + "\n");
+                        sb.append(json + "----=====\n");
                     }
                     //Log.d(null,"====++++++///// "+ sb.toString().trim());
                     return sb.toString().trim();
@@ -199,7 +199,7 @@ public class DataBaseManager extends Activity {
             readFromOnlineDatabase();
             GUI.TextScore1.setText(teamsScore[2]);
             GUI.TextScore2.setText(teamsScore[3]);
-            writeToOnlineDatabase(1,teamsScore[1],Integer.parseInt(teamsScore[2]),Integer.parseInt(teamsScore[3]));
+            //writeToOnlineDatabase(1,teamsScore[1],Integer.parseInt(teamsScore[2]),Integer.parseInt(teamsScore[3]));
             //score = resultSet.getString(2);
             //score = resultSet.getString(3);
         }
