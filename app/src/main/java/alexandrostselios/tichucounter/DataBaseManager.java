@@ -1,5 +1,7 @@
 package alexandrostselios.tichucounter;
 
+// token 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
+
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
