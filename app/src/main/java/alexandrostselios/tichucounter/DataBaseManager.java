@@ -134,19 +134,19 @@ public class DataBaseManager extends Activity {
                     try {
                         JSONObject jsonObject = new JSONObject(response);
                         //String success = jsonObject.getString("success");
-/*                        String message = jsonObject.getString("message");
-                        String teamID = jsonObject.getString("TeamID");
+                        String message = jsonObject.getString("TeamID");
+                       /* String teamID = jsonObject.getString("TeamID");
                         String NameTeam1 = jsonObject.getString("NameTeam1");
                         String NameTeam2 = jsonObject.getString("NameTeam2");*/
                         if(flag == 0){
-                            Log.d(null,"++++++++++++++++++++++++++++++");
+                            Log.d(null,"-------------------------------");
                             Log.d(null,jsonObject.toString());
-/*                            Log.d(null,"Response: : " + success + "\n");
-                            Log.d(null,"Message: " + message + "\n");
+                            Log.d(null,"Response: : " + message + "\n");
+                            /*  Log.d(null,"Message: " + message + "\n");
                             Log.d(null, "TeamID: " + teamID + "\n");
                             Log.d(null,"NameTeam1: " + NameTeam1 + "\n");
                             Log.d(null,"NameTeam2: " + NameTeam2 + "\n");*/
-                            Log.d(null,"++++++++++++++++++++++++++++++");
+                            Log.d(null,"-------------------------------");
                         }else if(flag == 1){
                             Log.d(null,"++++++++++++++++++++++++++++++");
                             Log.d(null,jsonObject.toString());
@@ -271,8 +271,8 @@ public class DataBaseManager extends Activity {
         Cursor resultSet = mydatabase.rawQuery("SELECT * FROM ScoreHistory ORDER BY ID DESC;",null);
         if(resultSet.getCount()>0){
             read(0,"800",900,700);
-            GUI.TextScore1.setText(teamsScore[2]);
-            GUI.TextScore2.setText(teamsScore[3]);
+            //GUI.TextScore1.setText(teamsScore[2]);
+           //GUI.TextScore2.setText(teamsScore[3]);
             //writeToOnlineDatabase(1,teamsScore[1],Integer.parseInt(teamsScore[2]),Integer.parseInt(teamsScore[3]));
             //score = resultSet.getString(2);
             //score = resultSet.getString(3);
