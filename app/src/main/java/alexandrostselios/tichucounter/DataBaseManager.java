@@ -1,6 +1,6 @@
 package alexandrostselios.tichucounter;
 
-// token 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
+// token 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
 
 import android.app.Activity;
 import android.content.Context;
