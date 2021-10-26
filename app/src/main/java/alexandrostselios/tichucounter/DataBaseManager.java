@@ -55,75 +55,75 @@ public class DataBaseManager extends Activity {
 
     }
 
-    private void writeToOnlineDatabase(int flag, String TeamID, int score1, int score2){
-        WriteQueue = Volley.newRequestQueue(this.context);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, Write_Server_URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                synchronized (new Object()){
-                    try {
-                        JSONObject jsonObject = new JSONObject(response);
-                        String success = jsonObject.getString("success");
-/*                        String message = jsonObject.getString("message");
-                        String teamID = jsonObject.getString("TeamID");
-                        String NameTeam1 = jsonObject.getString("NameTeam1");
-                        String NameTeam2 = jsonObject.getString("NameTeam2");*/
-                        if(success.equals("1") && flag == 0){
-                            Log.d(null,"++++++++++++++++++++++++++++++");
-                            Log.d(null,jsonObject.toString());
-/*                            Log.d(null,"Response: : " + success + "\n");
-                            Log.d(null,"Message: " + message + "\n");
-                            Log.d(null, "TeamID: " + teamID + "\n");
-                            Log.d(null,"NameTeam1: " + NameTeam1 + "\n");
-                            Log.d(null,"NameTeam2: " + NameTeam2 + "\n");*/
-                            Log.d(null,"++++++++++++++++++++++++++++++");
-                        }else if(success.equals("1") && flag == 1){
-                            Log.d(null,"++++++++++++++++++++++++++++++");
-                            Log.d(null,jsonObject.toString());
-/*                            Log.d(null,"Response: : " + success + "\n");
-                            Log.d(null,"Message: " + message + "\n");
-                            Log.d(null, "TeamID: " + teamID + "\n");
-                            Log.d(null,"NameTeam1: " + NameTeam1 + "\n");
-                            Log.d(null,"NameTeam2: " + NameTeam2 + "\n");
-                            Log.d(null,"ScoreTeam1: " + jsonObject.getString("ScoreTeam1") + "\n");
-                            Log.d(null,"ScoreTeam2: " + jsonObject.getString("ScoreTeam2") + "\n");*/
-                            Log.d(null,"++++++++++++++++++++++++++++++");
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-            }
-        },new Response.ErrorListener(){
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(null,"=======++++++++=========----------/  "+error.getMessage());
-            }
-        })
-        {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String,String> params = new HashMap<>();
-                if(flag == 0){
-                    params.put("Table","Teams");
-                    params.put("NameTeam1","Alex");
-                    params.put("NameTeam2","Tselios");
-                }else if(flag == 1){
-                    params.put("Table","ScoreHistory");
-                    params.put("ScoreTeam1",String.valueOf(score1));
-                    params.put("ScoreTeam2",String.valueOf(score2));
-                }else{
-                    params.put("Table","FinalScore");
-                    params.put("ScoreTeam1",String.valueOf(score1));
-                    params.put("ScoreTeam2",String.valueOf(score2));
-                }
-                params.put("TeamID", TeamID);
-                return params;
-            }
-        };
-        WriteQueue.add(stringRequest);
-    }
+//    private void writeToOnlineDatabase(int flag, int TeamID, int score1, int score2){
+//        WriteQueue = Volley.newRequestQueue(this.context);
+//        StringRequest stringRequest = new StringRequest(Request.Method.POST, Write_Server_URL, new Response.Listener<String>() {
+//            @Override
+//            public void onResponse(String response) {
+//                synchronized (new Object()){
+//                    try {
+//                        JSONObject jsonObject = new JSONObject(response);
+//                        String success = jsonObject.getString("success");
+//                        String message = jsonObject.getString("message");
+//                        String teamID = jsonObject.getString("TeamID");
+//                        String NameTeam1 = jsonObject.getString("NameTeam1");
+//                        String NameTeam2 = jsonObject.getString("NameTeam2");
+//                        if(success.equals("1") && flag == 0){
+//                            Log.d(null,"++++++++++++++++++++++++++++++");
+//                            Log.d(null,jsonObject.toString());
+//                            Log.d(null,"Response: : " + success + "\n");
+//                            Log.d(null,"Message: " + message + "\n");
+//                            Log.d(null, "TeamID: " + teamID + "\n");
+//                            Log.d(null,"NameTeam1: " + NameTeam1 + "\n");
+//                            Log.d(null,"NameTeam2: " + NameTeam2 + "\n");
+//                            Log.d(null,"++++++++++++++++++++++++++++++");
+//                        }else if(success.equals("1") && flag == 1){
+//                            Log.d(null,"++++++++++++++++++++++++++++++");
+//                            Log.d(null,jsonObject.toString());
+//                            Log.d(null,"Response: : " + success + "\n");
+//                            Log.d(null,"Message: " + message + "\n");
+//                            Log.d(null, "TeamID: " + teamID + "\n");
+//                            Log.d(null,"NameTeam1: " + NameTeam1 + "\n");
+//                            Log.d(null,"NameTeam2: " + NameTeam2 + "\n");
+//                            Log.d(null,"ScoreTeam1: " + jsonObject.getString("ScoreTeam1") + "\n");
+//                            Log.d(null,"ScoreTeam2: " + jsonObject.getString("ScoreTeam2") + "\n");
+//                            Log.d(null,"++++++++++++++++++++++++++++++");
+//                        }
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//
+//            }
+//        },new Response.ErrorListener(){
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Log.d(null,"=======++++++++=========----------/  "+error.getMessage());
+//            }
+//        })
+//        {
+//            @Override
+//            protected Map<String, String> getParams() throws AuthFailureError {
+//                Map<String,String> params = new HashMap<>();
+//                if(flag == 0){
+//                    params.put("Table","Teams");
+//                    params.put("NameTeam1","Alex");
+//                    params.put("NameTeam2","Tselios");
+//                }else if(flag == 1){
+//                    params.put("Table","ScoreHistory");
+//                    params.put("ScoreTeam1",String.valueOf(score1));
+//                    params.put("ScoreTeam2",String.valueOf(score2));
+//                }else{
+//                    params.put("Table","FinalScore");
+//                    params.put("ScoreTeam1",String.valueOf(score1));
+//                    params.put("ScoreTeam2",String.valueOf(score2));
+//                }
+//                params.put("TeamID", String.valueOf(TeamID));
+//                return params;
+//            }
+//        };
+//        WriteQueue.add(stringRequest);
+//    }
 
     private void read(int flag, String TeamID, int score1, int score2){
         WriteQueue = Volley.newRequestQueue(this.context);
@@ -197,7 +197,7 @@ public class DataBaseManager extends Activity {
     }
 
 
-    private void readFromOnlineDatabase(){
+   /* private void readFromOnlineDatabase(){
         class GetJSON extends AsyncTask<Void, Void, String> {
             @Override
             protected void onPreExecute() {
@@ -234,9 +234,9 @@ public class DataBaseManager extends Activity {
         }
         GetJSON getJSON = new GetJSON();
         getJSON.execute();
-    }
+    }*/
 
-    private void loadIntoListView(String json) throws JSONException {
+    /*private void loadIntoListView(String json) throws JSONException {
         JSONArray jsonArray = new JSONArray(json);
         JSONObject obj = jsonArray.getJSONObject(0);
         Log.d(null,obj.toString());
@@ -244,13 +244,14 @@ public class DataBaseManager extends Activity {
         teamsScore[1] = obj.getString("TeamID");
         teamsScore[2] = obj.getString("Score1");
         teamsScore[3] = obj.getString("Score2");
-    }
+    }*/
 
     public void createDatabase() {
         mydatabase.execSQL("CREATE TABLE IF NOT EXISTS Teams(ID INTEGER PRIMARY KEY AUTOINCREMENT,Team1 VARCHAR,Team2 VARCHAR);");
         mydatabase.execSQL("CREATE TABLE IF NOT EXISTS FinalScore(ID INTEGER PRIMARY KEY AUTOINCREMENT, TeamID INTEGER NOT NULL,Score1 INTEGER, Score2 INTEGER, FOREIGN KEY (ID) REFERENCES Teams (ID));");
         mydatabase.execSQL("CREATE TABLE IF NOT EXISTS ScoreHistory(ID INTEGER PRIMARY KEY AUTOINCREMENT,TeamID INTEGER NOT NULL,Score1 INTEGER, Score2 INTEGER, FOREIGN KEY (ID) REFERENCES Teams (ID));");
         mydatabase.execSQL("INSERT INTO Teams(Team1,Team2) VALUES('Alexandros','Tselios');");
+        //writeToOnlineDatabase(0,163,0,0);
     }
 
     public void  saveRoundScore(int score1,int score2){
@@ -259,24 +260,35 @@ public class DataBaseManager extends Activity {
         resultSet.moveToFirst();
         index = resultSet.getString(0);
         mydatabase.execSQL("INSERT INTO ScoreHistory(TeamID,Score1,Score2) VALUES("+Integer.parseInt(index)+","+score1+","+score2+");");
-        if(start == 0){
-            writeToOnlineDatabase(0,index,0,0);
+        /*if(start == 0){
+           writeToOnlineDatabase(0,Integer.parseInt(index),score1,score2);
             start=1;
         }
-        writeToOnlineDatabase(1,index,score1,score2);
+        writeToOnlineDatabase(1,Integer.parseInt(index),score1,score2);*/
+        resultSet.close();
     }
 
     public void revertScore(){
-        String score;
-        Cursor resultSet = mydatabase.rawQuery("SELECT * FROM ScoreHistory ORDER BY ID DESC;",null);
-        if(resultSet.getCount()>0){
-            read(0,"800",900,700);
-            //GUI.TextScore1.setText(teamsScore[2]);
-           //GUI.TextScore2.setText(teamsScore[3]);
-            //writeToOnlineDatabase(1,teamsScore[1],Integer.parseInt(teamsScore[2]),Integer.parseInt(teamsScore[3]));
-            //score = resultSet.getString(2);
-            //score = resultSet.getString(3);
+        String index =null;
+        int score1 = 0;
+        int score2 = 0;
+        Cursor resultSet = mydatabase.rawQuery("SELECT * FROM ScoreHistory WHERE TEAMID =(SELECT max(ID) FROM Teams) ORDER BY ID DESC;",null);
+        if(resultSet.getCount() == 0 || resultSet == null){
+            score1=0;
+            score2=0;
+        }else{
+            resultSet.moveToFirst();
+            if (resultSet.getCount() > 0) {
+                resultSet.moveToNext();
+                score1 = resultSet.getInt(2);
+                score2 = resultSet.getInt(3);
+                //saveRoundScore(score1,score2);
+                //writeToOnlineDatabase(1,Integer.parseInt(index),250,600);
+            }
         }
+        saveRoundScore(score1, score2);
+        GUI.TextScore1.setText(String.valueOf(score1));
+        GUI.TextScore2.setText(String.valueOf(score2));
         resultSet.close();
     }
 
@@ -286,15 +298,15 @@ public class DataBaseManager extends Activity {
         resultSet.moveToFirst();
         index = resultSet.getString(0);
         mydatabase.execSQL("INSERT INTO FinalScore(TeamID,Score1,Score2) VALUES("+Integer.parseInt(index)+","+score1+","+score2+");");
-        DataBaseManager db = new DataBaseManager();
-        db.writeToOnlineDatabase(2,index,score1,score2);
+        //DataBaseManager db = new DataBaseManager();
+        //db.writeToOnlineDatabase(2,index,score1,score2);
+        resultSet.close();
     }
 
     public void loadScore() {
         String index;
         Cursor resultSet = mydatabase.rawQuery("SELECT count(*) FROM FinalScore ORDER BY ID DESC;",null);
         resultSet.moveToFirst();
-        Log.d(null,String.valueOf(resultSet.getInt(0)));
         if(resultSet.getInt(0)>0){
             resultSet = mydatabase.rawQuery("SELECT * FROM FinalScore ORDER BY ID DESC;",null);
             resultSet.moveToFirst();

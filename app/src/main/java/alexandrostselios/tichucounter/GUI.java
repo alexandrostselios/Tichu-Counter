@@ -101,10 +101,9 @@ public class GUI extends AppCompatActivity {
                 return true;
             case R.id.menu_revert:
                 dataBaseManager.revertScore();
+                tichuCounter.setScoreTeam1(Integer.parseInt(String.valueOf(TextScore1.getText())));
+                tichuCounter.setScoreTeam2(Integer.parseInt(String.valueOf(TextScore2.getText())));
                 Toast.makeText(GUI.this, "Revert Score!!", Toast.LENGTH_SHORT).show();
-                //tichuCounter.setScoreTeam1(Integer.parseInt(String.valueOf(TextScore1.getText())));
-                //tichuCounter.setScoreTeam2(Integer.parseInt(String.valueOf(TextScore2.getText())));
-                //dataBaseManager.saveRoundScore(tichuCounter.getScoreTeam1(),tichuCounter.getScoreTeam2());
                 return true;
             case R.id.menu_about:
                 Toast.makeText(GUI.this, "Version: " + BuildConfig.VERSION_NAME, Toast.LENGTH_SHORT).show();
