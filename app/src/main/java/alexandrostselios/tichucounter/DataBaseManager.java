@@ -44,6 +44,7 @@ public class DataBaseManager extends Activity {
     private RequestQueue WriteQueue = null;
     private RequestQueue readQueue = null;
     public static int start = 0;
+    private int teamID = 0;
     int MAX_SERIAL_THREAD_POOL_SIZE = 1;
 
     public DataBaseManager (SQLiteDatabase mydatabase,Context context){
@@ -251,7 +252,17 @@ public class DataBaseManager extends Activity {
         mydatabase.execSQL("CREATE TABLE IF NOT EXISTS FinalScore(ID INTEGER PRIMARY KEY AUTOINCREMENT, TeamID INTEGER NOT NULL,Score1 INTEGER, Score2 INTEGER, FOREIGN KEY (ID) REFERENCES Teams (ID));");
         mydatabase.execSQL("CREATE TABLE IF NOT EXISTS ScoreHistory(ID INTEGER PRIMARY KEY AUTOINCREMENT,TeamID INTEGER NOT NULL,Score1 INTEGER, Score2 INTEGER, FOREIGN KEY (ID) REFERENCES Teams (ID));");
         mydatabase.execSQL("INSERT INTO Teams(Team1,Team2) VALUES('Alexandros','Tselios');");
+        getTeamID();
         //writeToOnlineDatabase(0,163,0,0);
+    }
+
+    private int getTeamID(){
+        Cursor resultSet = mydatabase.rawQuery("SELECT max(ID) FROM Teams;",null);
+        resultSet.moveToFirst();
+        teamID = Integer.parseInt(resultSet.getString(0));
+        //Log.d(null,"=========== Team ID: "+teamID);
+        resultSet.close();
+        return teamID;
     }
 
     public void  saveRoundScore(int score1,int score2){
@@ -266,6 +277,7 @@ public class DataBaseManager extends Activity {
         }
         writeToOnlineDatabase(1,Integer.parseInt(index),score1,score2);*/
         resultSet.close();
+        //Log.d(null,"-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- "+GUI.Team1.getText().toString());
     }
 
     public void revertScore(){
@@ -303,18 +315,22 @@ public class DataBaseManager extends Activity {
         resultSet.close();
     }
 
-    public void loadScore() {
+    public boolean loadScore() {
         String index;
         Cursor resultSet = mydatabase.rawQuery("SELECT count(*) FROM FinalScore ORDER BY ID DESC;",null);
         resultSet.moveToFirst();
-        if(resultSet.getInt(0)>0){
-            resultSet = mydatabase.rawQuery("SELECT * FROM FinalScore ORDER BY ID DESC;",null);
+        if(resultSet.getInt(0) == 0 || resultSet == null){
+            resultSet.close();
+            return false;
+        }else {
+            resultSet = mydatabase.rawQuery("SELECT * FROM FinalScore ORDER BY ID DESC;", null);
             resultSet.moveToFirst();
             index = resultSet.getString(2);
             GUI.TextScore1.setText(index);
             index = resultSet.getString(3);
             GUI.TextScore2.setText(index);
+            resultSet.close();
+            return true;
         }
-        resultSet.close();
     }
 }

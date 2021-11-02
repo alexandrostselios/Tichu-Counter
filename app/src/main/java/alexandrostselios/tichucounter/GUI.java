@@ -31,6 +31,7 @@ public class GUI extends AppCompatActivity {
     private DataBaseManager dataBaseManager = null;
 
     private TextView roundScore = null;
+    //public static TextView Team1 = null;
 
     private Button tichu1 = null;
     private Button grandTichu1 = null;
@@ -93,11 +94,14 @@ public class GUI extends AppCompatActivity {
                 Toast.makeText(GUI.this, "Game was Saved succesfully!!", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_load_game:
-                dataBaseManager.loadScore();
-                tichuCounter.setScoreTeam1(Integer.parseInt(String.valueOf(TextScore1.getText())));
-                tichuCounter.setScoreTeam2(Integer.parseInt(String.valueOf(TextScore2.getText())));
-                dataBaseManager.saveRoundScore(tichuCounter.getScoreTeam1(),tichuCounter.getScoreTeam2());
-                Toast.makeText(GUI.this, "Game was Loaded succesfully!!", Toast.LENGTH_SHORT).show();
+                if(dataBaseManager.loadScore()){
+                    tichuCounter.setScoreTeam1(Integer.parseInt(String.valueOf(TextScore1.getText())));
+                    tichuCounter.setScoreTeam2(Integer.parseInt(String.valueOf(TextScore2.getText())));
+                    dataBaseManager.saveRoundScore(tichuCounter.getScoreTeam1(),tichuCounter.getScoreTeam2());
+                    Toast.makeText(GUI.this, "Game was Loaded succesfully!!", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(GUI.this, "No game to Load", Toast.LENGTH_SHORT).show();
+                }
                 return true;
             case R.id.menu_revert:
                 dataBaseManager.revertScore();
@@ -119,6 +123,17 @@ public class GUI extends AppCompatActivity {
     }
 
     private void createButtons(){
+//        Team1 = findViewById(R.id.team1);
+//        Team1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//               //Team1.setText(" ");
+//            }
+//        });
+//        Team1.setEnabled(true);
+//        Team1.setClickable(true);
+//        Team1.setFocusableInTouchMode(true);
+
         roundScore = findViewById(R.id.roundPoints);
         roundScore.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -252,6 +267,7 @@ public class GUI extends AppCompatActivity {
         grandTichu2.getBackground().clearColorFilter();
         currentScore1.setText(String.valueOf(""));
         currentScore2.setText(String.valueOf(""));
+        createDatabase();
         playGame();
 
     }
