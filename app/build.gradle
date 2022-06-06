@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 29
-    buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId 'alexandrostselios.tichucounter'
         minSdkVersion 17
@@ -19,6 +18,7 @@ android {
     }
     productFlavors {
     }
+    namespace 'alexandrostselios.tichucounter'
 }
 
 dependencies {
