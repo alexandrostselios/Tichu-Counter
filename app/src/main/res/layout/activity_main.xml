@@ -6,9 +6,10 @@
     android:layout_height="match_parent"
     tools:context="com.example.alexa.tichucounter.MainActivity">
 
-    <TextView
+    <EditText
         android:id="@+id/team1"
-        android:layout_width="wrap_content"
+        android:background="@color/ic_launcher_background"
+        android:layout_width="115dp"
         android:layout_height="51dp"
         android:text="Team1"
         android:textSize="25dp"
@@ -100,9 +101,10 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.612" />
 
-    <TextView
+    <EditText
         android:id="@+id/team2"
-        android:layout_width="wrap_content"
+        android:background="@color/ic_launcher_background"
+        android:layout_width="115dp"
         android:layout_height="51dp"
         android:text="Team2"
         android:textSize="25dp"
